@@ -1,22 +1,10 @@
 from django.db import models
+from transcriptome.models import Transcript
 
 
-class Transcript(models.Model):
-    accession = models.CharField(max_length=10)
-    seq_name = models.CharField(max_length=50)
-    seq = models.TextField()
-    insecticide = models.CharField(max_length=15)
-    line = models.CharField(max_length=15)
-    species = models.CharField(max_length=40)
-    owner = models.CharField(max_length=15)
-    platform = models.CharField(max_length=15)
-    # homo_refseq_acc = models.CharField(max_length=10)
-    # homo_refseq_des = models.TextField()
-
-
-class BlastxBest(models.Model):
+class Homology(models.Model):
     tool_version = models.CharField(max_length=10)
-    query_name = models.CharField(max_length=50)
+    query_name = models.ForeignKey(Transcript, to_field='query_name')
     hit_name = models.CharField(max_length=10)
     query_length = models.PositiveIntegerField(max_length=5)
     query_hsp_start = models.PositiveIntegerField(max_length=5)
@@ -41,12 +29,5 @@ class BlastxBest(models.Model):
     hit_coverage = models.FloatField(max_length=6)
     hit_description = models.TextField()
 
-
-
-
-
-# class Refseq(models.Model):
-#     accession = models.CharField(max_length=10)
-#     seq = models.TextField()
-#     species = models.CharField(max_length=15)
-#     description = models.TextField()
+    class Meta:
+        app_label = 'transcriptome'

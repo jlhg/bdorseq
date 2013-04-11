@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 
 def index(request):
     if request.user.is_authenticated():
-        pass
+        return render(request, 'index.html', {'account_status': 'active'})
     else:
         return render(request, 'signin.html', {'account_status': 'notlogged'})
 
@@ -30,4 +30,12 @@ def search(request):
 
 
 def list(request):
+    pass
+
+
+def export(request):
+    pass
+
+
+def adduser(request):
     pass
