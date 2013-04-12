@@ -2,7 +2,7 @@
 
 {% block content %}
   {% if account_status == 'active': %}
-    <form action="/search/" method="get">{% csrf_token %}
+    <form action="/search/" method="get">
 
       {{ transcript_search_form.non_field_errors }}
 
@@ -11,5 +11,40 @@
         <label for="id_transcript_name">Transcript Name</label>
         {{ transcript_search_form.transcript_name }}
 
-        {{ transcript_search_form.}}
+        {{ transcript_search_form.line.errors }}
+        <label for="id_line">Line</label>
+        {{ transcript_search_form.line }}
+
+        {{ transcript_search_form.insecticide.errors }}
+        <label for="id_insecticide">Insecticide</label>
+        {{ transcript_search_form.insecticide }}
+
+        {{ transcript_search_form.refacc.errors }}
+        <label for="id_refacc">Dmel Accession</label>
+        {{ transcript_search_form.refacc }}
       </div>
+
+      <div class="field_wrapper">
+        {{ transcript_search_form.refdes.errors }}
+        <label for="id_refdes">Dmel Description</label>
+        {{ transcript_search_form.refdes }}
+      </div>
+
+      <div class="field_wrapper">
+        {{ transcript_search_form.transcript_seq.errors }}
+        <label for="id_transcript_seq">Transcript Sequence</label>
+        {{ transcript_search_form.transcript_seq}}
+      </div>
+
+      <div class="field_wrapper">
+        {{ transcript_search_form.items_per_page.errors }}
+        <label for="id_items_per_page">Items per page</label>
+        {{ transcript_search_form.items_per_page }}
+      </div>
+
+      <p><input type="submit", value="Search" /><input type="reset", value="Clear" /></p>
+
+    </form>
+
+  {% endif %}
+{% endblock content %}

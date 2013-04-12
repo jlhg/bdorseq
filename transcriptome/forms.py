@@ -19,7 +19,7 @@ class TranscriptSearchForm(forms.Form):
                                       ('Resistant', 'resistant'),
                                       ('Recovered', 'recovered')],
                              attrs={'onchange': 'this.form.submit();',
-                                    'name': 'line'})
+                                    'name': 'line_submit'})
     transcript_seq = forms.CharField(min_length=100, required=False)
     refacc = forms.CharField(max_length=10, required=False)
     refdes = forms.CharField(min_length=100, required=False)

@@ -27,9 +27,10 @@ def signin(request):
 
     else:
         if request.method == 'POST':
-            username = request.POST['username']
-            password = request.POST['password']
+            username = request.POST.get('username')
+            password = request.POST.get('password')
             user = authenticate(username=username, password=password)
+
             if user is not None:
                 if user.is_active:
                     login(request, user)
@@ -57,10 +58,11 @@ def search(request):
 
     else:
         if request.method == 'GET':
-            if 'line' in request.GET:
+            transcript_search_form = forms.TranscriptSearchForm(request.GET)
+
+            if 'line_submit' in request.GET:
                 # Change search field
-                line = request.GET.get('line')
-                transcript_search_form = forms.TranscriptSearchForm()
+                line = request.GET.get('line_submit')
 
                 if line == 'susceptible':
                     transcript_search_form.line.widget.initial = 'susceptible'
@@ -73,10 +75,9 @@ def search(request):
                                                                          ('Fenthion', 'fenthion'),
                                                                          ('Methomyl', 'methomyl')]
 
-                return render(request, 'index.jinja2', {'account_status': 'active',
-                                                        'transcript_search_form': transcript_search_form})
-
-            transcript_search_form = forms.TranscriptSearchForm(request.GET)
+                if request.GET.get('page') is None:
+                    return render(request, 'index.jinja2', {'account_status': 'active',
+                                                            'transcript_search_form': transcript_search_form})
 
             transcript_name = request.GET.get('transcript_name', '')
             insecticide = request.GET.get('insecticide', '')
@@ -129,25 +130,25 @@ def search(request):
             # Last page
             transcript_subset = transcript_set[(page - 1) * pager.get('items_per_page'): transcript_set.count()]
 
-        return render(request, 'search.html', {'transcript_search_form': transcript_search_form,
-                                               'transcript_subset': transcript_subset,
-                                               'pager': pager})
+        return render(request, 'search.jinja2', {'transcript_search_form': transcript_search_form,
+                                                 'transcript_subset': transcript_subset,
+                                                 'pager': pager})
 
 
 def details(request, transcript_acc):
     if not request.user.is_authenticated():
-        return render(request, 'signin.html', {'account_status': 'expired'})
+        return render(request, 'signin.jinja2', {'account_status': 'expired'})
 
     else:
         transcript_details = Transcript.objects.get(accession=transcript_acc)
-        return render(request, 'details.html', {'transcript_details': transcript_details})
+        return render(request, 'details.jinja2', {'transcript_details': transcript_details})
 
 
 def export(request):
     pass
 
     if not request.user.is_authenticated():
-        return render(request, 'signin.html', {'account_status': 'expired'})
+        return render(request, 'signin.jinja2', {'account_status': 'expired'})
 
     else:
         # export data
