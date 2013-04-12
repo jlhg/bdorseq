@@ -1,4 +1,5 @@
 from django.db import models
+from transcriptome.models.homology import Homology
 
 
 class Transcript(models.Model):
@@ -10,8 +11,7 @@ class Transcript(models.Model):
     species = models.CharField(max_length=40)
     owner = models.CharField(max_length=15)
     platform = models.CharField(max_length=15)
-    # homo_refseq_acc = models.CharField(max_length=10)
-    # homo_refseq_des = models.TextField()
+    homology = models.ForeignKey(Homology)
 
     class Meta:
         app_label = 'transcriptome'

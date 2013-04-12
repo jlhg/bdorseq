@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
+<head>
+  {% block head %}
+
+  <link rel="stylesheet" href="style.css" />
+
+  <title>
+  {% block title %}
+
+  Home
+
+  {% endblock title %}
+
+  - Oriental Fruit Fly Transcriptome Database
+
+  </title>
+
+  {% endblock head %}
+</head>
+
+<body>
+  {% block body %}
+
+  <div id="header">
+    {% block header %}
+
+    {% endblock header %}
+  </div>
+
+  <div id="menu">
+    {% block menu %}
+
+    {% endblock menu %}
+  </div>
+
+  <div id="content">
+    {% block content %}
+
+    {% endblock content %}
+  </div>
+
+  <div id="footer">
+    {% block footer %}
+
+    <p>Oriental Fruit Fly Transcriptome Database v0.0</p>
+
+    {% endblock footer %}
+  </div>
+
+  {% endblock body %}
+</body>

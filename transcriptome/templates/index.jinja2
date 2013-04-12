@@ -1,0 +1,15 @@
+{% extends "base.jinja2" %}
+
+{% block content %}
+  {% if account_status == 'active': %}
+    <form action="/search/" method="get">{% csrf_token %}
+
+      {{ transcript_search_form.non_field_errors }}
+
+      <div class="field_wrapper">
+        {{ transcript_search_form.transcript_name.errors }}
+        <label for="id_transcript_name">Transcript Name</label>
+        {{ transcript_search_form.transcript_name }}
+
+        {{ transcript_search_form.}}
+      </div>

@@ -1,10 +1,9 @@
 from django.db import models
-from transcriptome.models import Transcript
 
 
 class Homology(models.Model):
     tool_version = models.CharField(max_length=10)
-    query_name = models.ForeignKey(Transcript, to_field='query_name')
+    query_name = models.CharField(max_length=50)
     hit_name = models.CharField(max_length=10)
     query_length = models.PositiveIntegerField(max_length=5)
     query_hsp_start = models.PositiveIntegerField(max_length=5)
