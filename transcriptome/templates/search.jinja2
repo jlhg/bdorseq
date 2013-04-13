@@ -1,7 +1,46 @@
 {% extends "base.jinja2" %}
 
-{% block content %}
+{% if account_status == 'active' %}
+  {% block search %}
+    {% include "transcript_search_form.jinja2"  %}
+  {% endblock search %}
 
-  <p>This is tast.</p>
+  <div>
+  {% block content %}
+    {{ pager.last_page}}
+    <table>
+      <thead>
+        <tr>
+          <th>Transcript Name</th>
+          <th>Reference Acc</th>
+          <th>Reference Description</th>
+        </tr>
+      </thead>
 
-{% endblock content %}
+      <tbody>
+        {% for query in transcript_subset %}
+          <tr>
+            <td>{{ query.seqname }}</td>
+            <td>{{ query.homology.hit_name }}</td>
+            <td>{{ query.homology.hit_description }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  {% endblock content %}
+  </div>
+
+{% else %}
+  {% block login %}
+  {% if account_status == 'expired' %}
+    <p>Please login to use database.</p>
+    {% include "login_form.jinja2" %}
+
+  {% elif account_status == 'invalid' %}
+    <p>Invalid user!</p>
+    {% include "login_form.jinja2" %}
+
+  {% endif %}
+  {% endblock login %}
+{% endif %}

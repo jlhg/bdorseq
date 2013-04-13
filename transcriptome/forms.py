@@ -3,27 +3,33 @@ from django import forms
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=15)
-    password = forms.PasswordInput(max_length=15)
+    password = forms.CharField(max_length=15, widget=forms.PasswordInput)
 
 
 class TranscriptSearchForm(forms.Form):
-    transcript_name = forms.CharField(max_length=50, required=False)
-    insecticide = forms.ChoiceField(initial={'All': 'all'},
-                                    choices=[('All', 'all'),
-                                             ('Formothion', 'formothion'),
-                                             ('Fenthion', 'fenthion'),
-                                             ('Methomyl', 'methomyl')])
-    line = forms.ChoiceField(initial={'All', 'all'},
-                             choices=[('All', 'all'),
-                                      ('Susceptible', 'susceptible'),
-                                      ('Resistant', 'resistant'),
-                                      ('Recovered', 'recovered')],
-                             attrs={'onchange': 'this.form.submit();',
-                                    'name': 'line_submit'})
-    transcript_seq = forms.CharField(min_length=100, required=False)
-    refacc = forms.CharField(max_length=10, required=False)
-    refdes = forms.CharField(min_length=100, required=False)
-    items_per_page = forms.IntegerField(max_length=4, initial='20')
+    seqname = forms.CharField(max_length=50, required=False)
+    line = forms.ChoiceField(initial={'', 'All'},
+                             choices=[('', 'All'),
+                                      ('ss_old', 'SS/Hsu1v3'),
+                                      ('ss_new', 'SS/Hsu2'),
+                                      ('ss_chi', 'SS/China'),
+                                      ('rs_for', 'RS/Formothion'),
+                                      ('rs_fen', 'RS/Fenthion'),
+                                      ('rs_met', 'RS/Methomyl'),
+                                      ('rs_mal', 'RS/Malathion'),
+                                      ('rs_nal', 'RS/Naled'),
+                                      ('rs_tri', 'RS/Trichlorfon'),
+                                      ('rc_for', 'RC/Formothion'),
+                                      ('rc_fen', 'RC/Fenthion'),
+                                      ('rc_met', 'RC/Methomyl')])
+    seq = forms.CharField(required=False)
+    refacc = forms.CharField(max_length=15, required=False)
+    refdes = forms.CharField(required=False)
+    items_per_page = forms.ChoiceField(initial={20, '20'},
+                                       choices=[(20, '20'),
+                                                (50, '50'),
+                                                (100, '100'),
+                                                (200, '200')])
 
 
 class ExportTranscriptListForm(forms.Form):
