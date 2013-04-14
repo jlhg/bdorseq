@@ -1,9 +1,11 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.contrib.auth import authenticate, login
-from django.http import Http404
+from django.views.decorators.csrf import csrf_exempt
 from jinja2 import Environment, PackageLoader
 from transcriptome.models import Transcript
 from transcriptome import forms
+from scripts import formatconvert
+import re
 
 env = Environment(loader=PackageLoader('transcriptome', 'templates'))
 
@@ -126,7 +128,8 @@ def search(request):
         return HttpResponse(template_search.render({'account_status': 'active',
                                                     'transcript_search_form': transcript_search_form,
                                                     'transcript_subset': transcript_subset,
-                                                    'pager': pager}))
+                                                    'pager': pager,
+                                                    'getparam': request.GET}))
 
 
 def details(request, accession):
@@ -142,8 +145,54 @@ def details(request, accession):
         return HttpResponse(template_details.render({'transcript_details': transcript_details}))
 
 
+@csrf_exempt
 def export(request):
-    pass
+    if not request.user.is_authenticated():
+        login_form = forms.LoginForm()
+        template_index = env.get_template('index.jinja2')
+        return HttpResponse(template_index.render({'account_status': 'expired',
+                                                  'login_form': login_form}))
+    else:
+        if request.method == 'POST':
+            accession = request.POST.get('accession', '')
+            seqname = request.POST.get('seqname', '')
+            line = request.POST.get('line', 'all')
+            seq = request.POST.get('seq', '')
+            refacc = request.POST.get('refacc', '')
+            refdes = request.POST.get('refdes', '')
+            order = request.POST.get('order', 'accession')
+
+            pks = []
+
+            for i in request.POST:
+                if re.search('_export_\d+', i):
+                    pks.append(request.POST.get(i))
+
+            if pks:
+                # Export selected items
+                transcript_set = Transcript.objects.filter(id__in=pks).order_by(order)
+
+            else:
+                # Export all filterd items
+                transcript_set = Transcript.objects.filter(accession__icontains=accession,
+                                                           seqname__icontains=seqname,
+                                                           line__icontains=line,
+                                                           seq__icontains=seq,
+                                                           homology__hit_name__icontains=refacc,
+                                                           homology__hit_description__icontains=refdes).order_by(order)
+
+            if request.POST.get('export_fasta'):
+                # Exports transcript sequences to FASTA file
+                response = HttpResponse(formatconvert.model_to_fasta(transcript_set), content_type='text/csv')
+                response['Content-Disposition'] = 'attachment; filename=%s' % 'transcripts.fa'
+                return response
+
+            elif request.POST.get('export_csv'):
+                # Exports blast output to CSV format file
+                pass
+
+            else:
+                raise Http404
 
 
 def adduser(request):

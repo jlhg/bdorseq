@@ -1,5 +1,7 @@
 {% if login_form %}
   <form action="/login/" method="post">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+
     {{ login_form.non_field_errors }}
 
     <div class="fieldWrapper">

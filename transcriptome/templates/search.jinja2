@@ -8,26 +8,38 @@
   <div>
   {% block content %}
     {{ pager.last_page}}
-    <table>
-      <thead>
-        <tr>
-          <th>Transcript Name</th>
-          <th>Reference Acc</th>
-          <th>Reference Description</th>
-        </tr>
-      </thead>
+    {% block export_form %}
+      <form action="/bdorseq/export/" method="post">
+        <input type="hidden" name="csrfmiddlewaretoken" value={{ csrf_token }} />
+        <input type="hidden" name="seqname", value={{ getparam.seqname }} />
+        <input type="hidden" name="line", value={{ getparam.line }} />
+        <input type="hidden" name="seq", value={{ getparam.seq }} />
+        <input type="hidden" name="refacc", value={{ getparam.refacc }} />
+        <input type="hidden" name="refdes", value={{ getparam.refdes }} />
+        <input type="submit", name="export_fasta", value="Export to FASTA file" />
+        <input type="submit", name="export_csv", value="Export to CSV file" />
+        <table>
+          <thead>
+            <tr>
+              <th>Transcript Name</th>
+              <th>Reference Acc</th>
+              <th>Reference Description</th>
+            </tr>
+          </thead>
 
-      <tbody>
-        {% for query in transcript_subset %}
-          <tr>
-            <td>{{ query.seqname }}</td>
-            <td>{{ query.homology.hit_name }}</td>
-            <td>{{ query.homology.hit_description }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
+          <tbody>
+            {% for query in transcript_subset %}
+              <tr>
+                <td><input type="checkbox", name={{ '_export_' ~ query.id }}, value={{ query.id }} /></td>
+                <td>{{ query.seqname }}</td>
+                <td>{{ query.homology.hit_name }}</td>
+                <td>{{ query.homology.hit_description }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </form>
+    {% endblock export_form %}
   {% endblock content %}
   </div>
 
