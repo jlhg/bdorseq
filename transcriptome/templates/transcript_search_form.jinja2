@@ -5,35 +5,35 @@
     <div class="field_wrapper">
       {{ transcript_search_form.line.errors }}
       <label for="id_line">Line</label>
-      {{ transcript_search_form.line }}
+      {{ transcript_search_form.line|safe }}
     </div>
 
     <div class="field_wrapper">
       {{ transcript_search_form.seqname.errors }}
       <label for="id_seqname">Transcript Name</label>
-      {{ transcript_search_form.seqname }}
+      {{ transcript_search_form.seqname|safe }}
 
       {{ transcript_search_form.refacc.errors }}
       <label for="id_refacc">Dmel. Accession</label>
-      {{ transcript_search_form.refacc }}
+      {{ transcript_search_form.refacc|safe }}
     </div>
 
     <div class="field_wrapper">
       {{ transcript_search_form.refdes.errors }}
       <label for="id_refdes">Dmel Description</label>
-      {{ transcript_search_form.refdes }}
+      {{ transcript_search_form.refdes|safe }}
     </div>
 
     <div class="field_wrapper">
       {{ transcript_search_form.seq.errors }}
       <label for="id_seq">Transcript Sequence</label>
-      {{ transcript_search_form.seq}}
+      {{ transcript_search_form.seq|safe }}
     </div>
 
     <div class="field_wrapper">
       {{ transcript_search_form.items_per_page.errors }}
       <label for="id_items_per_page">Items per page</label>
-      {{ transcript_search_form.items_per_page }}
+      {{ transcript_search_form.items_per_page|safe }}
     </div>
 
     <p><input type="submit", value="Search" /><input type="reset", value="Clear" /></p>

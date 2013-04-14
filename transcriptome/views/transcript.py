@@ -1,35 +1,38 @@
 from django.http import HttpResponse, Http404
 from django.contrib.auth import authenticate, login
-from django.views.decorators.csrf import csrf_exempt
-from jinja2 import Environment, PackageLoader
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.template import RequestContext
+from coffin.shortcuts import render_to_response
 from transcriptome.models import Transcript
 from transcriptome import forms
 from scripts import formatconvert
 import re
 
-env = Environment(loader=PackageLoader('transcriptome', 'templates'))
-
 
 def index(request):
     if not request.user.is_authenticated():
         login_form = forms.LoginForm()
-        template_index = env.get_template('index.jinja2')
-        return HttpResponse(template_index.render({'account_status': 'expired',
-                                                   'login_form': login_form}))
+        return render_to_response('index.jinja2',
+                                  {'account_status': 'expired',
+                                   'login_form': login_form},
+                                  context_instance=RequestContext(request))
 
     else:
         transcript_search_form = forms.TranscriptSearchForm()
-        template_index = env.get_template('index.jinja2')
-        return HttpResponse(template_index.render({'account_status': 'active',
-                                                   'transcript_search_form': transcript_search_form}))
+        return render_to_response('index.jinja2',
+                                  {'account_status': 'active',
+                                   'transcript_search_form': transcript_search_form},
+                                  context_instance=RequestContext(request))
 
 
+@csrf_protect
 def signin(request):
     if request.user.is_authenticated():
         transcript_search_form = forms.TranscriptSearchForm()
-        template_index = env.get_template('index.jinja2')
-        return HttpResponse(template_index.render({'account_status': 'active',
-                                                   'transcript_search_form': transcript_search_form}))
+        return render_to_response('index.jinja2',
+                                  {'account_status': 'active',
+                                   'transcript_search_form': transcript_search_form},
+                                  context_instance=RequestContext(request))
 
     else:
         if request.method == 'POST':
@@ -41,21 +44,25 @@ def signin(request):
                 if user.is_active:
                     login(request, user)
                     transcript_search_form = forms.TranscriptSearchForm()
-                    template_index = env.get_template('index.jinja2')
-                    return HttpResponse(template_index.render({'account_status': 'active',
-                                                               'transcript_search_form': transcript_search_form}))
+                    transcript_search_form = forms.TranscriptSearchForm()
+                    return render_to_response('index.jinja2',
+                                              {'account_status': 'active',
+                                               'transcript_search_form': transcript_search_form},
+                                              context_instance=RequestContext(request))
 
                 else:
                     login_form = forms.LoginForm()
-                    template_index = env.get_template('index.jinja2')
-                    return HttpResponse(template_index.render({'account_status': 'inactive',
-                                                              'login_form': login_form}))
+                    return render_to_response('index.jinja2',
+                                              {'account_status': 'inactive',
+                                               'login_form': login_form},
+                                              context_instance=RequestContext(request))
 
             else:
                 login_form = forms.LoginForm()
-                template_index = env.get_template('index.jinja2')
-                return HttpResponse(template_index.render({'account_status': 'inavalid',
-                                                          'login_form': login_form}))
+                return render_to_response('index.jinja2',
+                                          {'account_status': 'invalid',
+                                           'login_form': login_form},
+                                          context_instance=RequestContext(request))
 
         else:
             raise Http404
@@ -64,9 +71,10 @@ def signin(request):
 def search(request):
     if not request.user.is_authenticated():
         login_form = forms.LoginForm()
-        template_index = env.get_template('index.jinja2')
-        return HttpResponse(template_index.render({'account_status': 'expired',
-                                                  'login_form': login_form}))
+        return render_to_response('index.jinja2',
+                                  {'account_status': 'expired',
+                                   'login_form': login_form},
+                                  context_instance=RequestContext(request))
 
     else:
         if request.method == 'GET':
@@ -124,34 +132,39 @@ def search(request):
             # Last page
             transcript_subset = transcript_set[(page - 1) * pager.get('items_per_page'): transcript_set.count()]
 
-        template_search = env.get_template('search.jinja2')
-        return HttpResponse(template_search.render({'account_status': 'active',
-                                                    'transcript_search_form': transcript_search_form,
-                                                    'transcript_subset': transcript_subset,
-                                                    'pager': pager,
-                                                    'getparam': request.GET}))
+        return render_to_response('search.jinja2',
+                                  {'account_status': 'active',
+                                   'transcript_search_form': transcript_search_form,
+                                   'transcript_subset': transcript_subset,
+                                   'pager': pager,
+                                   'getparam': request.GET},
+                                  context_instance=RequestContext(request))
 
 
 def details(request, accession):
     if not request.user.is_authenticated():
         login_form = forms.LoginForm()
-        template_index = env.get_template('index.jinja2')
-        return HttpResponse(template_index.render({'account_status': 'expired',
-                                                  'login_form': login_form}))
+        return render_to_response('index.jinja2',
+                                  {'account_status': 'expired',
+                                   'login_form': login_form},
+                                  context_instance=RequestContext(request))
 
     else:
         transcript_details = Transcript.objects.get(accession=accession)
-        template_details = env.get_template('details.jinja2')
-        return HttpResponse(template_details.render({'transcript_details': transcript_details}))
+        return render_to_response('details.jinja2',
+                                  {'transcript_details': transcript_details},
+                                  context_instance=RequestContext(request))
 
 
 @csrf_exempt
 def export(request):
     if not request.user.is_authenticated():
         login_form = forms.LoginForm()
-        template_index = env.get_template('index.jinja2')
-        return HttpResponse(template_index.render({'account_status': 'expired',
-                                                  'login_form': login_form}))
+        return render_to_response('index.jinja2',
+                                  {'account_status': 'expired',
+                                   'login_form': login_form},
+                                  context_instance=RequestContext(request))
+
     else:
         if request.method == 'POST':
             accession = request.POST.get('accession', '')
