@@ -1,6 +1,10 @@
 {% extends "base.jinja2" %}
 
 {% if account_status == 'active' %}
+  {% block logout %}
+    {% include "logout_form.jinja2" %}
+  {% endblock logout %}
+
   {% block search %}
     {% include "transcript_search_form.jinja2"  %}
   {% endblock search %}

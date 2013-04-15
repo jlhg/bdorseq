@@ -1,0 +1,5 @@
+{% if account_status == 'active' %}
+  <form name="logout_form", action="/bdorseq/logout/" method="post">{% csrf_token %}
+    <input type="submit", name="logout", value="Logout" />
+  </form>
+{% endif %}

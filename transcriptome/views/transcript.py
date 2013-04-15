@@ -1,5 +1,5 @@
 from django.http import HttpResponse, Http404
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.template import RequestContext
 from coffin.shortcuts import render_to_response
@@ -66,6 +66,15 @@ def signin(request):
 
         else:
             raise Http404
+
+
+def signout(request):
+    logout(request)
+    login_form = forms.LoginForm()
+    return render_to_response('index.jinja2',
+                              {'account_status': 'expired',
+                               'login_form': login_form},
+                              context_instance=RequestContext(request))
 
 
 def search(request):
