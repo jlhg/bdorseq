@@ -3,7 +3,7 @@ from transcriptome.models.transcript import Transcript
 
 
 class Homology(models.Model):
-    tool_version = models.CharField(max_length=10)
+    tool = models.CharField(max_length=10)
     query_name = models.OneToOneField(Transcript, to_field='seqname')
     hit_name = models.CharField(max_length=10)
     query_length = models.PositiveIntegerField(max_length=5)

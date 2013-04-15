@@ -1,7 +1,7 @@
 {% if login_form %}
   <form action="/bdorseq/login/" method="post">{% csrf_token %}
 
-    {# {{ login_form.non_field_errors }} #}
+    {{ login_form.non_field_errors|safe }}
 
     <div class="fieldWrapper">
       {{ login_form.username.errors }}

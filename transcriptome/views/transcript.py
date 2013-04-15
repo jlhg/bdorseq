@@ -5,7 +5,7 @@ from django.template import RequestContext
 from coffin.shortcuts import render_to_response
 from transcriptome.models import Transcript
 from transcriptome import forms
-from scripts import formatconvert
+from scripts import modelformatter
 import re
 
 
@@ -82,7 +82,7 @@ def search(request):
 
             accession = request.GET.get('accession', '')
             seqname = request.GET.get('seqname', '')
-            line = request.GET.get('line', 'all')
+            line = request.GET.get('line', '')
             seq = request.GET.get('seq', '')
             refacc = request.GET.get('refacc', '')
             refdes = request.GET.get('refdes', '')
@@ -111,7 +111,9 @@ def search(request):
                  'current_page': page
                  }
 
-        check_total_page = divmod(transcript_set.count(), items_per_page)
+        search_count = transcript_set.count()
+
+        check_total_page = divmod(search_count, items_per_page)
         if check_total_page[1] == 0:
             pager['last_page'] = check_total_page[0]
 
@@ -126,7 +128,7 @@ def search(request):
         if page * items_per_page < pager.get('last_page'):
             # Has next page
             pager['next_page'] = page + 1
-            transcript_subset = transcript_set[(page) - 1 * pager.get('items_per_page'): page * pager.get('items_per_page')]
+            transcript_subset = transcript_set[(page - 1) * pager.get('items_per_page'): page * pager.get('items_per_page')]
 
         else:
             # Last page
@@ -137,7 +139,8 @@ def search(request):
                                    'transcript_search_form': transcript_search_form,
                                    'transcript_subset': transcript_subset,
                                    'pager': pager,
-                                   'getparam': request.GET},
+                                   'getparam': request.GET,
+                                   'search_count': search_count},
                                   context_instance=RequestContext(request))
 
 
@@ -167,23 +170,23 @@ def export(request):
 
     else:
         if request.method == 'POST':
-            accession = request.POST.get('accession', '')
-            seqname = request.POST.get('seqname', '')
-            line = request.POST.get('line', 'all')
-            seq = request.POST.get('seq', '')
-            refacc = request.POST.get('refacc', '')
-            refdes = request.POST.get('refdes', '')
-            order = request.POST.get('order', 'accession')
+            accession = request.POST.get('accession', '').strip('/')
+            seqname = request.POST.get('seqname', '').strip('/')
+            line = request.POST.get('line', '').strip('/')
+            seq = request.POST.get('seq', '').strip('/')
+            refacc = request.POST.get('refacc', '').strip('/')
+            refdes = request.POST.get('refdes', '').strip('/')
+            order = request.POST.get('order', 'accession').strip('/')
 
-            pks = []
+            ids = []
 
             for i in request.POST:
                 if re.search('_export_\d+', i):
-                    pks.append(request.POST.get(i))
+                    ids.append(request.POST.get(i))
 
-            if pks:
+            if ids:
                 # Export selected items
-                transcript_set = Transcript.objects.filter(id__in=pks).order_by(order)
+                transcript_set = Transcript.objects.filter(id__in=ids).order_by(order)
 
             else:
                 # Export all filterd items
@@ -196,13 +199,15 @@ def export(request):
 
             if request.POST.get('export_fasta'):
                 # Exports transcript sequences to FASTA file
-                response = HttpResponse(formatconvert.model_to_fasta(transcript_set), content_type='text/csv')
-                response['Content-Disposition'] = 'attachment; filename=%s' % 'transcripts.fa'
+                response = HttpResponse(modelformatter.transcript_to_fasta(transcript_set), content_type='text/csv')
+                response['Content-Disposition'] = 'attachment; filename=%s' % 'transcript.fa'
                 return response
 
-            elif request.POST.get('export_csv'):
-                # Exports blast output to CSV format file
-                pass
+            elif request.POST.get('export_tsv'):
+                # Exports blast output to TSV format file
+                response = HttpResponse(modelformatter.transcript_homology_to_tsv(transcript_set), content_type='text/csv')
+                response['Content-Disposition'] = 'attachment; filename=%s' % 'blast.txt'
+                return response
 
             else:
                 raise Http404

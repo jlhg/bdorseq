@@ -2,19 +2,16 @@
 
 <head>
   {% block head %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{{ STATIC_URL ~ 'css/style.css' }}" />
+    <script type="text/javascript" src="{{ STATIC_URL ~ 'js/main.js' }}"></script>
 
-  <link rel="stylesheet" href="style.css" />
-
-  <title>
-  {% block title %}
-
-  Home
-
-  {% endblock title %}
-
-  - Oriental Fruit Fly Transcriptome Database
-
-  </title>
+    <title>
+      {% block title %}
+        Home
+      {% endblock title %}
+      - Oriental Fruit Fly Transcriptome Database
+    </title>
 
   {% endblock head %}
 </head>

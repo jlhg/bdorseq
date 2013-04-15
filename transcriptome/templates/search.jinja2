@@ -7,21 +7,41 @@
 
   <div>
   {% block content %}
-    {{ pager.last_page}}
+    <div>
+      Search results: {{ search_count }}
+    </div>
+    {% if pager.current_page == 1 %}
+      First
+      <a href="/bdorseq/search/?page={{ pager.previous_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Previous<a>
+      <a href="/bdorseq/search/?page={{ pager.next_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Next<a>
+      <a href="/bdorseq/search/?page={{ pager.last_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Last<a>
+    {% elif pager.current_page == pager.last_page %}
+      <a href="/bdorseq/search/?page={{ pager.first_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">First<a>
+      <a href="/bdorseq/search/?page={{ pager.previous_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Previous<a>
+      <a href="/bdorseq/search/?page={{ pager.next_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Next<a>
+      Last
+    {% else %}
+      <a href="/bdorseq/search/?page={{ pager.first_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">First<a>
+      <a href="/bdorseq/search/?page={{ pager.previous_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Previous<a>
+      <a href="/bdorseq/search/?page={{ pager.next_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Next<a>
+      <a href="/bdorseq/search/?page={{ pager.last_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Last<a>
+    {% endif %}
+
     {% block export_form %}
-      <form action="/bdorseq/export/" method="post">
-        <input type="hidden" name="csrfmiddlewaretoken" value={{ csrf_token }} />
-        <input type="hidden" name="seqname", value={{ getparam.seqname }} />
-        <input type="hidden" name="line", value={{ getparam.line }} />
-        <input type="hidden" name="seq", value={{ getparam.seq }} />
-        <input type="hidden" name="refacc", value={{ getparam.refacc }} />
-        <input type="hidden" name="refdes", value={{ getparam.refdes }} />
+      <form name="export_form", action="/bdorseq/export/" method="post">
+        <input type="hidden" name="seqname", value={{ getparam.seqname|safe }} />
+        <input type="hidden" name="line", value={{ getparam.line|safe }} />
+        <input type="hidden" name="seq", value={{ getparam.seq|safe }} />
+        <input type="hidden" name="refacc", value={{ getparam.refacc|safe }} />
+        <input type="hidden" name="refdes", value={{ getparam.refdes|safe }} />
         <input type="submit", name="export_fasta", value="Export to FASTA file" />
-        <input type="submit", name="export_csv", value="Export to CSV file" />
+        <input type="submit", name="export_tsv", value="Export to TSV file" />
         <table>
           <thead>
             <tr>
+              <th>{# <input type="checkbox" onClick="toggle('export_form" /> #}</th>
               <th>Transcript Name</th>
+              <th>Length (bp)</th>
               <th>Reference Acc</th>
               <th>Reference Description</th>
             </tr>
@@ -32,6 +52,7 @@
               <tr>
                 <td><input type="checkbox", name={{ '_export_' ~ query.id }}, value={{ query.id }} /></td>
                 <td>{{ query.seqname }}</td>
+                <td>{{ query.homology.query_length }}</td>
                 <td>{{ query.homology.hit_name }}</td>
                 <td>{{ query.homology.hit_description }}</td>
               </tr>
