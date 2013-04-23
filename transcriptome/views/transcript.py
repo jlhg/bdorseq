@@ -115,7 +115,7 @@ def search(request):
         pager = {'items_per_page': items_per_page,
                  'previous_page': None,
                  'next_page': None,
-                 'first_page': None,
+                 'first_page': 1,
                  'last_page': None,
                  'current_page': page
                  }
@@ -132,9 +132,8 @@ def search(request):
         if page > 1:
             # Has previous page
             pager['previous_page'] = page - 1
-            pager['first_page'] = 1
 
-        if page * items_per_page < pager.get('last_page'):
+        if page * items_per_page < search_count:
             # Has next page
             pager['next_page'] = page + 1
             transcript_subset = transcript_set[(page - 1) * pager.get('items_per_page'): page * pager.get('items_per_page')]
