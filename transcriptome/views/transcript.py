@@ -2,6 +2,7 @@ from django.http import HttpResponse, Http404
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.template import RequestContext
+from django.db.models import Q
 from coffin.shortcuts import render_to_response
 from transcriptome.models import Transcript
 from transcriptome import forms
@@ -89,13 +90,12 @@ def search(request):
         if request.method == 'GET':
             transcript_search_form = forms.TranscriptSearchForm()
 
-            accession = request.GET.get('accession', '')
             seqname = request.GET.get('seqname', '')
             line = request.GET.get('line', '')
             seq = request.GET.get('seq', '')
             refacc = request.GET.get('refacc', '')
             refdes = request.GET.get('refdes', '')
-            order = request.GET.get('order', 'accession')
+            order = request.GET.get('order', 'seqname')
             items_per_page = int(request.GET.get('items_per_page', 20))
             page = int(request.GET.get('page', 1))
 
@@ -105,12 +105,25 @@ def search(request):
         if page < 1:
             page = 1
 
-        transcript_set = Transcript.objects.filter(accession__icontains=accession,
-                                                   seqname__icontains=seqname,
-                                                   line__icontains=line,
-                                                   seq__icontains=seq,
-                                                   homology__hit_name__icontains=refacc,
-                                                   homology__hit_description__icontains=refdes).order_by(order)
+        search_options = []
+
+        if seqname:
+            search_options.append(Q(seqname__icontains=seqname))
+
+        if line:
+            search_options.append(Q(line__icontains=line))
+
+        if seq:
+            search_options.append(Q(seq__icontains=seq))
+
+        search_options.append(Q(homology__hit_name__icontains=refacc))
+
+        if refdes:
+            search_options.append(Q(homology__hit_description__search=refdes))
+        else:
+            search_options.append(Q(homology__hit_description__icontains=refdes))
+
+        transcript_set = Transcript.objects.filter(*search_options).order_by(order)
 
         pager = {'items_per_page': items_per_page,
                  'previous_page': None,
@@ -152,7 +165,7 @@ def search(request):
                                   context_instance=RequestContext(request))
 
 
-def details(request, accession):
+def details(request, seqname):
     if not request.user.is_authenticated():
         login_form = forms.LoginForm()
         return render_to_response('index.jinja2',
@@ -161,7 +174,7 @@ def details(request, accession):
                                   context_instance=RequestContext(request))
 
     else:
-        transcript_details = Transcript.objects.get(accession=accession)
+        transcript_details = Transcript.objects.get(seqname=seqname)
         return render_to_response('details.jinja2',
                                   {'transcript_details': transcript_details},
                                   context_instance=RequestContext(request))
@@ -178,13 +191,12 @@ def export(request):
 
     else:
         if request.method == 'POST':
-            accession = request.POST.get('accession', '').strip('/')
             seqname = request.POST.get('seqname', '').strip('/')
             line = request.POST.get('line', '').strip('/')
             seq = request.POST.get('seq', '').strip('/')
             refacc = request.POST.get('refacc', '').strip('/')
             refdes = request.POST.get('refdes', '').strip('/')
-            order = request.POST.get('order', 'accession').strip('/')
+            order = request.POST.get('order', 'seqname').strip('/')
 
             ids = []
 
@@ -198,12 +210,25 @@ def export(request):
 
             else:
                 # Export all filterd items
-                transcript_set = Transcript.objects.filter(accession__icontains=accession,
-                                                           seqname__icontains=seqname,
-                                                           line__icontains=line,
-                                                           seq__icontains=seq,
-                                                           homology__hit_name__icontains=refacc,
-                                                           homology__hit_description__icontains=refdes).order_by(order)
+                search_options = []
+
+                if seqname:
+                    search_options.append(Q(seqname__icontains=seqname))
+
+                if line:
+                    search_options.append(Q(line__icontains=line))
+
+                if seq:
+                    search_options.append(Q(seq__icontains=seq))
+
+                search_options.append(Q(homology__hit_name__icontains=refacc))
+
+                if refdes:
+                    search_options.append(Q(homology__hit_description__search=refdes))
+                else:
+                    search_options.append(Q(homology__hit_description__icontains=refdes))
+
+                transcript_set = Transcript.objects.filter(*search_options).order_by(order)
 
             if request.POST.get('export_fasta'):
                 # Exports transcript sequences to FASTA file

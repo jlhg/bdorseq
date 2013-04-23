@@ -2,7 +2,6 @@ from django.db import models
 
 
 class Transcript(models.Model):
-    accession = models.CharField(max_length=10, unique=True)
     seqname = models.CharField(max_length=50, unique=True)
     seq = models.TextField()
     line = models.CharField(max_length=15)
