@@ -14,7 +14,12 @@
     <div>
       Search results: {{ search_count }}
     </div>
-    {% if pager.current_page == 1 %}
+    {% if pager.first_page == pager.last_page %}
+      First
+      Previous
+      Next
+      Last
+    {% elif pager.current_page == 1 %}
       First
       Previous
       <a href="/bdorseq/search/?page={{ pager.next_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Next<a>
