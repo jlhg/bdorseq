@@ -39,11 +39,11 @@
 
     {% block export_form %}
       <form name="export_form", action="/bdorseq/export/" method="post">
-        <input type="hidden" name="seqname", value={{ getparam.seqname|safe }} />
-        <input type="hidden" name="line", value={{ getparam.line|safe }} />
-        <input type="hidden" name="seq", value={{ getparam.seq|safe }} />
-        <input type="hidden" name="refacc", value={{ getparam.refacc|safe }} />
-        <input type="hidden" name="refdes", value={{ getparam.refdes|safe }} />
+        <input type="hidden" name="seqname", value="{{ getparam.seqname }}" />
+        <input type="hidden" name="line", value="{{ getparam.line }}" />
+        <input type="hidden" name="seq", value="{{ getparam.seq }}" />
+        <input type="hidden" name="refacc", value="{{ getparam.refacc }}" />
+        <input type="hidden" name="refdes", value="{{ getparam.refdes }}" />
         <input type="submit", name="export_fasta", value="Download FASTA" />
         <input type="submit", name="export_blast", value="Download BLAST" />
         <input type="submit", name="export_rpkm", value="Download Gene Expression" />
