@@ -224,7 +224,6 @@ def export(request):
                 if seq:
                     search_options.append(Q(seq__icontains=seq))
 
-
                 if refacc:
                     search_options.append(Q(homology__hit_name__icontains=refacc))
 
@@ -241,7 +240,7 @@ def export(request):
 
             elif request.POST.get('export_blast'):
                 # Exports blast output to TSV format file
-                response = HttpResponse(modelformatter.transcript_homology_to_tsv(transcript_set), content_type='text/csv')
+                response = HttpResponse(modelformatter.transcript_homology_to_blast(transcript_set), content_type='text/csv')
                 response['Content-Disposition'] = 'attachment; filename=%s' % 'blast.txt'
                 return response
 

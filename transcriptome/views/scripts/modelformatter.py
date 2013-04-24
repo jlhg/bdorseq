@@ -7,7 +7,7 @@ def transcript_to_fasta(transcript_objects):
     return ''.join(fasta)
 
 
-def transcript_homology_to_tsv(transcript_objects):
+def transcript_homology_to_blast(transcript_objects):
     tsv = []
 
     tsv.append('\t'.join(['tool',
@@ -33,7 +33,7 @@ def transcript_homology_to_tsv(transcript_objects):
                '\n')
 
     for obj in transcript_objects:
-        if obj.homology_set.all()[0]:
+        if obj.homology_set.all().count() > 0:
             tsv.append('\t'.join(map(str, [obj.homology_set.all()[0].tool,
                                            obj.homology_set.all()[0].query_name_id,
                                            obj.homology_set.all()[0].hit_name,
@@ -81,24 +81,27 @@ def transcript_to_expression(transcript_objects):
                '\n')
 
     for obj in transcript_objects:
-        if obj.expression_set.all()[0]:
-            if obj.homology_set.all()[0]:
-                annotation = obj.homology_set.all()[0].hit_description
+        if obj.expression_set.all().count() > 0:
+            for i in range(obj.expression_set.all().count()):
+                if obj.homology_set.all().count() > 0:
+                    annotation = obj.homology_set.all()[0].hit_description
 
-            else:
-                annotation = ''
+                else:
+                    annotation = ''
 
-            tsv.append('\t'.join(map(str, [obj.expression_set.all()[0].query_name_id,
-                                           len(obj.seq),
-                                           obj.expression_set.all()[0].ss_rpkm,
-                                           obj.expression_set.all()[0].rs_rpkm,
-                                           obj.expression_set.all()[0].rc_rpkm,
-                                           obj.expression_set.all()[0].rs_ss_ratio,
-                                           obj.expression_set.all()[0].rs_rc_ratio,
-                                           obj.expression_set.all()[0].expression,
-                                           obj.expression_set.all()[0].line,
-                                           obj.expression_set.all()[0].insecticide,
-                                           annotation])) +
-                       '\n')
+                tsv.append('\t'.join(map(str, [obj.expression_set.all()[i].query_name_id,
+                                               len(obj.seq),
+                                               obj.expression_set.all()[i].ss_rpkm,
+                                               obj.expression_set.all()[i].rs_rpkm,
+                                               obj.expression_set.all()[i].rc_rpkm,
+                                               obj.expression_set.all()[i].rs_ss_ratio,
+                                               obj.expression_set.all()[i].rs_rc_ratio,
+                                               obj.expression_set.all()[i].expression,
+                                               obj.expression_set.all()[i].line,
+                                               obj.expression_set.all()[i].insecticide,
+                                               annotation])) +
+                           '\n')
+        else:
+            tsv.append('ssdfdfd')
 
     return ''.join(tsv)
