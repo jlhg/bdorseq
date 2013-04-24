@@ -101,7 +101,5 @@ def transcript_to_expression(transcript_objects):
                                                obj.expression_set.all()[i].insecticide,
                                                annotation])) +
                            '\n')
-        else:
-            tsv.append('ssdfdfd')
 
     return ''.join(tsv)
