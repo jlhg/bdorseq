@@ -21,7 +21,8 @@ class TranscriptSearchForm(forms.Form):
                                       # ('rs_tri', 'RS/Trichlorfon'),
                                       ('rc_for', 'RC/Formothion'),
                                       ('rc_fen', 'RC/Fenthion'),
-                                      ('rc_met', 'RC/Methomyl')])
+                                      ('rc_met', 'RC/Methomyl')],
+                             required=False)
     seq = forms.CharField(required=False)
     refacc = forms.CharField(max_length=15, required=False)
     refdes = forms.CharField(required=False)

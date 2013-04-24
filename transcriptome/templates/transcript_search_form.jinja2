@@ -3,7 +3,7 @@
     {# {{ transcript_search_form.non_field_errors|safe }} #}
 
     <div class="field_wrapper">
-      {{ transcript_search_form.line.errors }}
+      {{ transcript_search_form.line.errors|safe }}
       <label for="id_line">Line</label>
       {{ transcript_search_form.line|safe }}
     </div>
@@ -36,6 +36,6 @@
       {{ transcript_search_form.items_per_page|safe }}
     </div>
 
-    <p><input type="submit", value="Search" /><input type="reset", value="Clear" /></p>
+    <p><input type="submit", value="Search" />
   </form>
 {% endif %}

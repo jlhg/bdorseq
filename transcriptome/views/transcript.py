@@ -97,12 +97,7 @@ def search(request):
             items_per_page = int(request.GET.get('items_per_page', 20))
             page = int(request.GET.get('page', 1))
 
-            transcript_search_form = forms.TranscriptSearchForm(initial={'seqname': seqname,
-                                                                         'line': line,
-                                                                         'seq': seq,
-                                                                         'refacc': refacc,
-                                                                         'refdes': refdes,
-                                                                         'items_per_page': items_per_page})
+            transcript_search_form = forms.TranscriptSearchForm(request.GET)
 
         else:
             raise Http404
@@ -229,12 +224,12 @@ def export(request):
                 if seq:
                     search_options.append(Q(seq__icontains=seq))
 
-                search_options.append(Q(homology__hit_name__icontains=refacc))
+
+                if refacc:
+                    search_options.append(Q(homology__hit_name__icontains=refacc))
 
                 if refdes:
                     search_options.append(Q(homology__hit_description__search=refdes))
-                else:
-                    search_options.append(Q(homology__hit_description__icontains=refdes))
 
                 transcript_set = Transcript.objects.filter(*search_options).order_by(order)
 
@@ -244,10 +239,16 @@ def export(request):
                 response['Content-Disposition'] = 'attachment; filename=%s' % 'transcript.fa'
                 return response
 
-            elif request.POST.get('export_tsv'):
+            elif request.POST.get('export_blast'):
                 # Exports blast output to TSV format file
                 response = HttpResponse(modelformatter.transcript_homology_to_tsv(transcript_set), content_type='text/csv')
                 response['Content-Disposition'] = 'attachment; filename=%s' % 'blast.txt'
+                return response
+
+            elif request.POST.get('export_rpkm'):
+                # Exports rpkm data to TSV format file
+                response = HttpResponse(modelformatter.transcript_to_expression(transcript_set), content_type='text/csv')
+                response['Content-Disposition'] = 'attachment; filename=%s' % 'expression.txt'
                 return response
 
             else:
