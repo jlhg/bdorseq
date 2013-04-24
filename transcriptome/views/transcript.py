@@ -108,7 +108,7 @@ def search(request):
         search_options = []
 
         if seqname:
-            search_options.append(Q(seqname__icontains=seqname))
+            search_options.append(Q(seqname__search=seqname))
 
         if line:
             search_options.append(Q(line__icontains=line))
@@ -213,7 +213,7 @@ def export(request):
                 search_options = []
 
                 if seqname:
-                    search_options.append(Q(seqname__icontains=seqname))
+                    search_options.append(Q(seqname__search=seqname))
 
                 if line:
                     search_options.append(Q(line__icontains=line))
