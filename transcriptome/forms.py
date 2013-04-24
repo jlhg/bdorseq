@@ -7,7 +7,7 @@ class LoginForm(forms.Form):
 
 
 class TranscriptSearchForm(forms.Form):
-    seqname = forms.CharField(required=False)
+    seqname = forms.CharField(max_length=50, required=False)
     line = forms.ChoiceField(initial={'', 'All'},
                              choices=[('', 'All'),
                                       ('ss_old', 'SS/Hsu1v3'),
