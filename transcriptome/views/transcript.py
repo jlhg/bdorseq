@@ -88,8 +88,6 @@ def search(request):
 
     else:
         if request.method == 'GET':
-            transcript_search_form = forms.TranscriptSearchForm()
-
             seqname = request.GET.get('seqname', '')
             line = request.GET.get('line', '')
             seq = request.GET.get('seq', '')
@@ -98,6 +96,13 @@ def search(request):
             order = request.GET.get('order', 'seqname')
             items_per_page = int(request.GET.get('items_per_page', 20))
             page = int(request.GET.get('page', 1))
+
+            transcript_search_form = forms.TranscriptSearchForm(initial={'seqname': seqname,
+                                                                         'line': line,
+                                                                         'seq': seq,
+                                                                         'refacc': refacc,
+                                                                         'refdes': refdes,
+                                                                         'items_per_page': items_per_page})
 
         else:
             raise Http404
@@ -116,12 +121,11 @@ def search(request):
         if seq:
             search_options.append(Q(seq__icontains=seq))
 
-        search_options.append(Q(homology__hit_name__icontains=refacc))
+        if refacc:
+            search_options.append(Q(homology__hit_name__icontains=refacc))
 
         if refdes:
             search_options.append(Q(homology__hit_description__search=refdes))
-        else:
-            search_options.append(Q(homology__hit_description__icontains=refdes))
 
         transcript_set = Transcript.objects.filter(*search_options).order_by(order)
 
@@ -136,7 +140,11 @@ def search(request):
         search_count = transcript_set.count()
 
         check_total_page = divmod(search_count, items_per_page)
-        if check_total_page[1] == 0:
+
+        if search_count == 0:
+            pager['last_page'] = 1
+
+        elif check_total_page[1] == 0:
             pager['last_page'] = check_total_page[0]
 
         else:

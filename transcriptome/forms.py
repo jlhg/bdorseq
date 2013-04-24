@@ -10,7 +10,7 @@ class TranscriptSearchForm(forms.Form):
     seqname = forms.CharField(max_length=50, required=False)
     line = forms.ChoiceField(initial={'', 'All'},
                              choices=[('', 'All'),
-                                      ('ss_old', 'SS/Hsu1v3'),
+                                      ('ss_old', 'SS/Hsu1'),
                                       ('ss_new', 'SS/Hsu2'),
                                       # ('ss_chi', 'SS/China'),
                                       ('rs_for', 'RS/Formothion'),

@@ -12,7 +12,8 @@
   <div>
   {% block content %}
     <div>
-      Search results: {{ search_count }}
+      Search results: {{ search_count }} <br>
+      Page: {{ pager.current_page }} / {{ pager.last_page }}
     </div>
     {% if pager.first_page == pager.last_page %}
       First
@@ -61,9 +62,14 @@
               <tr>
                 <td><input type="checkbox", name={{ '_export_' ~ query.id }}, value={{ query.id }} /></td>
                 <td>{{ query.seqname }}</td>
-                <td>{{ query.homology.query_length }}</td>
-                <td>{{ query.homology.hit_name }}</td>
-                <td>{{ query.homology.hit_description }}</td>
+                <td>{{ query.seq|length }}</td>
+                {% if query.homology_set.all().0 is defined  %}
+                  <td>{{ query.homology_set.all().0.hit_name }}</td>
+                  <td>{{ query.homology_set.all().0.hit_description }}</td>
+                {% else %}
+                  <td></td>
+                  <td></td>
+                {% endif %}
               </tr>
             {% endfor %}
           </tbody>
