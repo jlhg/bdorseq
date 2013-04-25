@@ -4,9 +4,9 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.template import RequestContext
 from django.db.models import Q
 from coffin.shortcuts import render_to_response
-from transcriptome.models import Transcript
+from transcriptome.models import Transcript, Refseq, PairwiseAlignmentCache
 from transcriptome import forms
-from scripts import modelformatter
+from scripts import modelformatter, alignment, formatter
 import re
 
 
@@ -177,9 +177,39 @@ def details(request, seqname):
                                   context_instance=RequestContext(request))
 
     else:
-        transcript_details = Transcript.objects.get(seqname=seqname)
+        transcript = Transcript.objects.get(seqname=seqname)
+
+        alignment_protein = ''
+
+        if transcript.homology_set.all().count() > 0:
+            pairwise_alignment_object = PairwiseAlignmentCache.objects.get(query_name=transcript.homology_set.all().get(0).query_name,
+                                                                           subject_name=transcript.Homology_set.all().get(0).hit_name)
+
+            if pairwise_alignment_object:
+                alignment_protein = pairwise_alignment_object.alignment_protein_html
+
+            else:
+                reference = Refseq.objects.get(refacc=transcript.Homology_set.all().get(0).hit_name)
+
+                alignment_protein = alignment.pairwise_protein(transcript.seqname,
+                                                               transcript.seq,
+                                                               transcript.homology_set.all().get(0).query_frame,
+                                                               reference.refacc,
+                                                               reference.seq,
+                                                               transcript.homology_set.all().get(0).hit_frame)
+
+                alignment_protein_html = formatter.clustal_to_html(alignment_protein)
+
+                new_alignment = PairwiseAlignmentCache(tool='MAFFT',
+                                                       query_name=transcript.seqname,
+                                                       subject_name=reference.refacc,
+                                                       alignment_protein=alignment_protein,
+                                                       alignment_protein_html=alignment_protein_html)
+                new_alignment.save()
+
         return render_to_response('details.jinja2',
-                                  {'transcript_details': transcript_details},
+                                  {'transcript': transcript,
+                                   'alignment_protein': alignment_protein_html},
                                   context_instance=RequestContext(request))
 
 

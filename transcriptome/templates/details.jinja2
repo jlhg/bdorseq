@@ -1,0 +1,98 @@
+{% extends "base.jinja2" %}
+
+{# Set variables: Blast results #}
+{% if transcript.homology_set.all().count() > 0 %}
+  {% set homology = transcript.homology_set.all().0 %}
+  {% set query_frame = homology.query_frame %}
+  {% set hit_name = homology.hit_name %}
+  {% set hit_length = homology.hit_length %}
+  {% set hsp_evalue = homology.hsp_evalue %}
+  {% set hsp_length = homology.hsp_length %}
+  {% set hsp_identity_percent = homology.hsp_identity_percent %}
+  {% set hit_description = homology.hit_description %}
+{% else %}
+  {% set query_frame = '' %}
+  {% set hit_name = '' %}
+  {% set hit_length = '' %}
+  {% set hsp_evalue = '' %}
+  {% set hsp_length = '' %}
+  {% set hsp_identity_percent = '' %}
+  {% set hit_description = '' %}
+{% endif %}
+
+{% if account_status == 'active' %}
+  {% block logout %}
+    {% include "logout_form.jinja2" %}
+  {% endblock logout %}
+
+  {% block search %}
+    {% include "transcript_search_form.jinja2"  %}
+  {% endblock search %}
+
+  <div>
+  {% block content %}
+    <div class="details">
+      Transcript Details
+
+      <div class="details-table">
+        <table border=1>
+          <thead>
+            <tr>
+              <th>General Information</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <th>Transcript Name</th>
+              <td>{{ query.seqname }}</td>
+              <th>Species</th>
+              <td>{{ query.species }}</td>
+            </tr>
+            <tr>
+              <th>Line</th>
+              <td>{{ query.line }}</td>
+              <th>Sequencing Platform</th>
+              <td>{{ query.platform }}</td>
+            </tr>
+          </tbody>
+
+          <thead>
+            <tr>
+              <th>Homological Information</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <th>Dmel. Accession</th>
+              <td>{{ hit_name }}</td>
+            </tr>
+            <tr>
+              <th>Dmel. Description</th>
+              <td>{{ hit_descrption }}</td>
+            </tr>
+            <tr>
+              <th>Pairwise Alignment</th>
+            </tr>
+            <tr>
+              <td>{{ alignment_protein }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+{% else %}
+  {% block login %}
+  {% if account_status == 'expired' %}
+    <p>Please login to use database.</p>
+    {% include "login_form.jinja2" %}
+
+  {% elif account_status == 'invalid' %}
+    <p>Invalid user!</p>
+    {% include "login_form.jinja2" %}
+
+  {% endif %}
+  {% endblock login %}
+{% endif %}
