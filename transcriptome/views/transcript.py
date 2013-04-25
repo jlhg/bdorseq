@@ -88,11 +88,11 @@ def search(request):
 
     else:
         if request.method == 'GET':
-            seqname = request.GET.get('seqname', '').strip()
+            seqname = str(request.GET.get('seqname', '')).strip()
             line = request.GET.get('line', '')
-            seq = request.GET.get('seq', '').strip()
-            refacc = request.GET.get('refacc', '').strip()
-            refdes = request.GET.get('refdes', '').strip()
+            seq = str(request.GET.get('seq', '')).strip()
+            refacc = str(request.GET.get('refacc', '')).strip()
+            refdes = str(request.GET.get('refdes', '')).strip()
             order = request.GET.get('order', 'seqname')
             items_per_page = int(request.GET.get('items_per_page', 20))
             page = int(request.GET.get('page', 1))
