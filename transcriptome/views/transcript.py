@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.template import RequestContext
 from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
 from coffin.shortcuts import render_to_response
 from transcriptome.models import Transcript, Refseq
 from transcriptome import forms
@@ -178,9 +179,9 @@ def details(request, seqname):
                                   context_instance=RequestContext(request))
 
     else:
-        transcript = Transcript.objects.get(seqname=seqname)
-
-        if not transcript:
+        try:
+            transcript = Transcript.objects.get(seqname=seqname)
+        except ObjectDoesNotExist:
             raise Http404
 
         alignment_protein_html = ''
