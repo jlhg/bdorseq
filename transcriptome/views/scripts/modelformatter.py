@@ -33,7 +33,7 @@ def transcript_homology_to_blast(transcript_objects):
                '\n')
 
     for obj in transcript_objects:
-        if obj.homology_set.all().count() > 0:
+        if obj.homology_set.all().exists():
             tsv.append('\t'.join(map(str, [obj.homology_set.all()[0].tool,
                                            obj.homology_set.all()[0].query_name_id,
                                            obj.homology_set.all()[0].hit_name,
@@ -81,9 +81,9 @@ def transcript_to_expression(transcript_objects):
                '\n')
 
     for obj in transcript_objects:
-        if obj.expression_set.all().count() > 0:
+        if obj.expression_set.all().exists():
             for i in range(obj.expression_set.all().count()):
-                if obj.homology_set.all().count() > 0:
+                if obj.homology_set.all().exists():
                     annotation = obj.homology_set.all()[0].hit_description
 
                 else:

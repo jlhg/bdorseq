@@ -6,7 +6,7 @@ from transcriptome.models.refseq import Refseq
 class Homology(models.Model):
     tool = models.CharField(max_length=15)
     query_name = models.ForeignKey(Transcript, to_field='seqname', unique=True)
-    hit_name = models.ForeignKey(Refseq, to_field='refacc')
+    hit_name = models.ForeignKey(Refseq, to_field='accession')
     query_length = models.PositiveIntegerField(max_length=8)
     query_hsp_start = models.PositiveIntegerField(max_length=8)
     query_hsp_end = models.PositiveIntegerField(max_length=8)

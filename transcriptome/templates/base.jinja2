@@ -4,7 +4,8 @@
   {% block head %}
     {% load staticfiles %}
     <link rel="stylesheet" href="{{ STATIC_URL ~ 'css/style.css' }}" />
-    <script type="text/javascript" src="{{ STATIC_URL ~ 'js/main.js' }}"></script>
+    <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+    {# <script type="text/javascript" src="{{ STATIC_URL ~ 'js/main.js' }}"></script> #}
 
     <title>
       {% block title %}
@@ -51,7 +52,7 @@
 
   <div id="footer">
     {% block footer %}
-    <p>Oriental Fruit Fly Transcriptome Database v1.3</p>
+    <p>Oriental Fruit Fly Transcriptome Database v1.4</p>
     {% endblock footer %}
   </div>
 

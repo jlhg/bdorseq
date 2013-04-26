@@ -4,10 +4,11 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.template import RequestContext
 from django.db.models import Q
 from coffin.shortcuts import render_to_response
-from transcriptome.models import Transcript, Refseq, PairwiseAlignmentCache
+from transcriptome.models import Transcript, Refseq
 from transcriptome import forms
 from scripts import modelformatter, alignment, formatter
 import re
+import pdb
 
 
 def index(request):
@@ -117,7 +118,7 @@ def search(request):
             search_options.append(Q(seq__icontains=seq))
 
         if refacc:
-            search_options.append(Q(homology__hit_name__icontains=refacc))
+            search_options.append(Q(homology__hit_name_id__icontains=refacc))
 
         if refdes:
             search_options.append(Q(homology__hit_description__search=refdes))
@@ -179,37 +180,26 @@ def details(request, seqname):
     else:
         transcript = Transcript.objects.get(seqname=seqname)
 
-        alignment_protein = ''
+        if not transcript:
+            raise Http404
 
-        if transcript.homology_set.all().count() > 0:
-            pairwise_alignment_object = PairwiseAlignmentCache.objects.get(query_name=transcript.homology_set.all().get(0).query_name,
-                                                                           subject_name=transcript.Homology_set.all().get(0).hit_name)
+        alignment_protein_html = ''
 
-            if pairwise_alignment_object:
-                alignment_protein = pairwise_alignment_object.alignment_protein_html
+        if transcript.homology_set.all().exists():
+            reference = Refseq.objects.get(accession=transcript.homology_set.all()[0].hit_name_id)
 
-            else:
-                reference = Refseq.objects.get(refacc=transcript.Homology_set.all().get(0).hit_name)
+            alignment_protein = alignment.pairwise_protein(transcript.seqname,
+                                                           transcript.seq,
+                                                           transcript.homology_set.all()[0].query_frame,
+                                                           reference.accession,
+                                                           reference.seq,
+                                                           transcript.homology_set.all()[0].hit_frame)
 
-                alignment_protein = alignment.pairwise_protein(transcript.seqname,
-                                                               transcript.seq,
-                                                               transcript.homology_set.all().get(0).query_frame,
-                                                               reference.refacc,
-                                                               reference.seq,
-                                                               transcript.homology_set.all().get(0).hit_frame)
-
-                alignment_protein_html = formatter.clustal_to_html(alignment_protein)
-
-                new_alignment = PairwiseAlignmentCache(tool='MAFFT',
-                                                       query_name=transcript.seqname,
-                                                       subject_name=reference.refacc,
-                                                       alignment_protein=alignment_protein,
-                                                       alignment_protein_html=alignment_protein_html)
-                new_alignment.save()
+            alignment_protein_html = formatter.clustal_to_html(alignment_protein, 'a')
 
         return render_to_response('details.jinja2',
                                   {'transcript': transcript,
-                                   'alignment_protein': alignment_protein_html},
+                                   'alignment_protein_html': alignment_protein_html},
                                   context_instance=RequestContext(request))
 
 
@@ -255,7 +245,7 @@ def export(request):
                     search_options.append(Q(seq__icontains=seq))
 
                 if refacc:
-                    search_options.append(Q(homology__hit_name__icontains=refacc))
+                    search_options.append(Q(homology__hit_name_id__icontains=refacc))
 
                 if refdes:
                     search_options.append(Q(homology__hit_description__search=refdes))

@@ -1,0 +1,23 @@
+/* Color of Aminio Acids */
+/* .aA, .aV, .aF, .aP, .aM, .aI, .aL, .aW { */
+/*     color: red; */
+/* } */
+
+/* .aD, .aE { */
+/*     color: blue; */
+/* } */
+
+/* .aR, .aK { */
+/*     color: fuchsia; */
+/* } */
+
+/* .aS, .aT, .aY, .aH, .aC, .aN, .aG, .aQ { */
+/*     color: green; */
+/* } */
+
+.pairwise-alignment {
+    padding-top: 20px;
+    padding-left: 20px;
+    font-size: 10pt;
+    font-family: 'Droid Sans Mono', sans-serif;
+}

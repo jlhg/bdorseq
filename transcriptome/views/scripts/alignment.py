@@ -1,3 +1,4 @@
+from subprocess import Popen, PIPE
 from django.core.files.temp import NamedTemporaryFile
 from Bio.Seq import Seq
 from Bio.Align.Applications import MafftCommandline
@@ -24,10 +25,15 @@ def pairwise_protein(query_name, query_seq, query_frame, subject_name, subject_s
     input_file = NamedTemporaryFile(prefix='mafft_')
     input_file.write('\n'.join(['>' + query_name,
                                 query_seq,
-                                '>' + query_name,
+                                '>' + subject_name,
                                 subject_seq]))
     input_file.flush()
 
-    mafft_cli = MafftCommandline(input=input_file.name, clustalout=True, namelength=40)
+    namelength = max([len(query_name), len(subject_name)]) + 4
 
-    return mafft_cli()[0]
+    mafft_cmd = 'mafft --clustalout --namelength ' + str(namelength) + ' ' + input_file.name
+    mafft_proc = Popen(mafft_cmd, stdout=PIPE, stderr=PIPE, shell=True)
+
+    stdout, stderr = mafft_proc.communicate()
+
+    return stdout

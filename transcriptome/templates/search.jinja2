@@ -62,10 +62,10 @@
             {% for query in transcript_subset %}
               <tr>
                 <td><input type="checkbox", name={{ '_export_' ~ query.id }}, value={{ query.id }} /></td>
-                <td><a href="/details/{{ query.seqname }}/" target="_blank">{{ query.seqname }}</a></td>
+                <td><a href="/bdorseq/details/{{ query.seqname }}/" target="_blank", style="text-decoration: none">{{ query.seqname }}</a></td>
                 <td>{{ query.seq|length }}</td>
-                {% if query.homology_set.all().count() > 0  %}
-                  <td>{{ query.homology_set.all().0.hit_name }}</td>
+                {% if query.homology_set.all().exists()  %}
+                  <td>{{ query.homology_set.all().0.hit_name_id }}</td>
                   <td>{{ query.homology_set.all().0.hit_description }}</td>
                 {% else %}
                   <td></td>

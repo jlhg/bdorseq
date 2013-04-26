@@ -1,23 +1,20 @@
 {% extends "base.jinja2" %}
 
 {# Set variables: Blast results #}
-{% if transcript.homology_set.all().count() > 0 %}
+{% if transcript.homology_set.all().exists() %}
   {% set homology = transcript.homology_set.all().0 %}
+  {% set query_length = homology.query_length %}
   {% set query_frame = homology.query_frame %}
-  {% set hit_name = homology.hit_name %}
+  {% set hit_name = homology.hit_name_id %}
   {% set hit_length = homology.hit_length %}
   {% set hsp_evalue = homology.hsp_evalue %}
+  {% set hsp_score = homology.hsp_score %}
   {% set hsp_length = homology.hsp_length %}
+  {% set hsp_gaps = homology.hsp_gaps %}
   {% set hsp_identity_percent = homology.hsp_identity_percent %}
+  {% set query_coverage = homology.query_coverage %}
+  {% set hit_coverage = homology.hit_coverage %}
   {% set hit_description = homology.hit_description %}
-{% else %}
-  {% set query_frame = '' %}
-  {% set hit_name = '' %}
-  {% set hit_length = '' %}
-  {% set hsp_evalue = '' %}
-  {% set hsp_length = '' %}
-  {% set hsp_identity_percent = '' %}
-  {% set hit_description = '' %}
 {% endif %}
 
 {% if account_status == 'active' %}
@@ -32,56 +29,95 @@
   <div>
   {% block content %}
     <div class="details">
-      Transcript Details
+      <h1>Transcript Details</h1>
 
       <div class="details-table">
-        <table border=1>
+        <table width="800">
           <thead>
             <tr>
-              <th>General Information</th>
+              <th colspan="4">General Information</th>
             </tr>
           </thead>
 
           <tbody>
             <tr>
               <th>Transcript Name</th>
-              <td>{{ query.seqname }}</td>
+              <td>{{ transcript.seqname }}</td>
               <th>Species</th>
-              <td>{{ query.species }}</td>
+              <td>{{ transcript.species }}</td>
             </tr>
             <tr>
               <th>Line</th>
-              <td>{{ query.line }}</td>
+              <td>{{ transcript.line }}</td>
               <th>Sequencing Platform</th>
-              <td>{{ query.platform }}</td>
+              <td>{{ transcript.platform }}</td>
             </tr>
           </tbody>
 
           <thead>
             <tr>
-              <th>Homological Information</th>
+              <th colspan="4">Homological Information</th>
             </tr>
           </thead>
 
           <tbody>
             <tr>
               <th>Dmel. Accession</th>
-              <td>{{ hit_name }}</td>
+              <td colspan="3">{{ hit_name }}</td>
             </tr>
             <tr>
               <th>Dmel. Description</th>
-              <td>{{ hit_descrption }}</td>
+              <td colspan="3">{{ hit_description }}</td>
             </tr>
             <tr>
-              <th>Pairwise Alignment</th>
+              <th>Query Length</th>
+              <td>{{ query_length }}</td>
+              <th>Hit Length</th>
+              <td>{{ hit_length}}</td>
             </tr>
             <tr>
-              <td>{{ alignment_protein }}</td>
+              <th>Query Frame</th>
+              <td>{{ query_frame }}</td>
+              <th>Hsp Length</th>
+              <td>{{ hsp_length}}</td>
+            </tr>
+            <tr>
+              <th>Hsp Score</th>
+              <td>{{ hsp_score }}</td>
+              <th>Hsp Gaps</th>
+              <td>{{ hsp_gaps }}</td>
+            </tr>
+            <tr>
+              <th>Hsp E-value</th>
+              {% if hsp_evalue is not defined %}
+                <td></td>
+              {% elif hsp_evalue > 0 %}
+                <td>{{ '%.3e' % hsp_evalue }}</td>
+              {% else %}
+                <td>0</td>
+              {% endif %}
+              <th>Hsp Identity (%)</th>
+              <td>{{ hsp_identity_percent }}</td>
+            </tr>
+            <tr>
+              <th>Query Coverage (%)</th>
+              <td>{{ query_coverage }}</td>
+              <th>Hit Coverage (%)</th>
+              <td>{{ hit_coverage }}</td>
+            </tr>
+
+
+            <tr>
+              <th colspan="4">Pairwise Alignment</th>
+            </tr>
+            <tr>
+              <td colspan="4" style="font-family: courier">{{ alignment_protein_html|safe }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+  {% endblock content %}
 
 {% else %}
   {% block login %}
