@@ -51,6 +51,7 @@ def search(request):
 
         align_dna_set = []
         align_protein_set = []
+        homology_subset = []
 
         align_protein_set.append((refseq.accession, 0, refseq.seq))
 
@@ -58,6 +59,8 @@ def search(request):
             transcript = Transcript.objects.get(seqname=homology.query_name_id)
 
             if transcript.line == line:
+                homology_subset.append(homology)
+
                 if align_type == 'include':
                     if homology.id in homo_ids:
                         align_dna_set.append((transcript.seqname, homology.query_frame, transcript.seq))
@@ -99,7 +102,7 @@ def search(request):
             return render_to_response('archive.jinja2',
                                       {'archive_search_form': archive_search_form,
                                        'select_status': select_status,
-                                       'homology_set': homology_set,
+                                       'homology_subset': homology_subset,
                                        'multiple_dna_alignment_html': multiple_dna_alignment_html,
                                        'multiple_protein_alignment_html': multiple_protein_alignment_html,
                                        'params': request.GET},

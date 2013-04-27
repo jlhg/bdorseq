@@ -12,7 +12,7 @@
     {% include "archive_search_form.jinja2" %}
   {% endblock search %}</br>
 
-  {% if homology_set is defined %}
+  {% if homology_subset is defined %}
     <h2>Dmel accession: {{ params.refacc }}</h2>
 
     <form name="select_form", action="/bdorseq/archive/" method="get">
@@ -35,7 +35,7 @@
         </thead>
 
         <tbody>
-          {% for homology in homology_set %}
+          {% for homology in homology_subset %}
             <tr>
               {% if select_status[homology.id] == 1 %}
                 <td><input type="checkbox", name={{ 'homo_' ~ homology.id }}, value={{ homology.id }} /></td>
