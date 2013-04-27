@@ -7,7 +7,7 @@ def clustal_to_html(clustal_content, seqtype):
     html = []
     lines = clustal_content.split('\n')
 
-    html.append('<div class="pairwise-alignment">')
+    html.append('<div class="alignment">')
     html.append('<span class="title">' + lines.pop(0) + '</span></br>')
 
     align_base_count = 0

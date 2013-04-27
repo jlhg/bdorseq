@@ -1,0 +1,19 @@
+{% if archive_search_form %}
+  <form action="/bdorseq/archive/" method="get">
+    {# {{ archive_search_form.non_field_errors|safe }} #}
+
+    <div class="field_wrapper">
+      {{ archive_search_form.line.errors|safe }}
+      <label for="id_line">Line</label>
+      {{ archive_search_form.line|safe }}
+
+      {{ archive_search_form.refacc.errors }}
+      <label for="id_refacc">Dmel. Accession</label>
+      {{ archive_search_form.refacc|safe }}
+    </div>
+
+    <div class="field_wrapper">
+      <input type="submit", name="search", value="Search" />
+    </div>
+  </form>
+{% endif %}

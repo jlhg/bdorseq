@@ -1,1 +1,101 @@
 {% extends "base.jinja2" %}
+{% block title %}
+  {% if params.refacc is defined %}
+    Archive - {{ params.refacc }}
+  {% else %}
+    Archive
+  {% endif %}
+{% endblock title %}
+
+{% block content %}
+  {% block search %}
+    {% include "archive_search_form.jinja2" %}
+  {% endblock search %}</br>
+
+  {% if homology_set is defined %}
+    <h2>Dmel accession: {{ params.refacc }}</h2>
+
+    <form name="select_form", action="/bdorseq/archive/" method="get">
+      <input type="hidden" name="line", value="{{ params.line }}" />
+      <input type="hidden" name="refacc", value="{{ params.refacc }}" />
+      <input type="submit", name="align_selected", value="Align Selected" />
+      <input type="submit", name="align_unselected", value="Align Unselected" />
+      <input type="submit", name="align_all", value="Align All" />
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Transcript Name</th>
+            <th>Length (bp)</th>
+            <th>E-value</th>
+            <th>Identity(%)</th>
+            <th>Hsp Length</th>
+            <th>Reference Description</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for homology in homology_set %}
+            <tr>
+              {% if select_status[homology.id] == 1 %}
+                <td><input type="checkbox", name={{ 'homo_' ~ homology.id }}, value={{ homology.id }} /></td>
+                <td class="selected"><a href="/bdorseq/details/{{ homology.query_name_id }}">
+                    {{ homology.query_name_id ~ '(' ~ homology.query_frame ~ ')' }}</a></td>
+                <td class="selected">{{ homology.query_length }}</td>
+                <td class="selected" nowrap="nowrap">
+                  {% if homology.hsp_evalue > 0 %}
+                    {{ '%.3e' % homology.hsp_evalue }}
+                  {% else %}
+                    0
+                  {% endif %}
+                </td>
+                <td class="selected">{{ homology.hsp_identity_percent }}</td>
+                <td class="selected">{{ homology.hsp_length }}</td>
+                <td class="selected">{{ homology.hit_description }}</td>
+              {% else %}
+                <td><input type="checkbox", name={{ 'homo_' ~ homology.id }}, value={{ homology.id }} /></td>
+                <td class="unselected"><a href="/bdorseq/details/{{ homology.query_name_id }}">
+                    {{ homology.query_name_id ~ '(' ~ homology.query_frame ~ ')' }}</a></td>
+                <td class="unselected">{{ homology.query_length }}</td>
+                <td class="unselected" nowrap="nowrap">
+                  {% if homology.hsp_evalue > 0 %}
+                    {{ '%.3e' % homology.hsp_evalue }}
+                  {% else %}
+                    0
+                  {% endif %}
+                </td>
+                <td class="unselected">{{ homology.hsp_identity_percent }}</td>
+                <td class="unselected">{{ homology.hsp_length }}</td>
+                <td class="unselected">{{ homology.hit_description }}</td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </form>
+
+    </br></br>
+    <table width="800">
+      {% if multiple_dna_alignment_html != '' %}
+        <tr>
+          <th>DNA Multiple Sequence Alignment</th>
+        </tr>
+        <tr>
+          <td>{{ multiple_dna_alignment_html|safe }}</td>
+        </tr>
+      {% else %}
+      {% endif %}
+      <tr>
+        <th>Protein Multiple Sequence Alignment</th>
+      </tr>
+      <tr>
+        <td>{{ multiple_protein_alignment_html|safe }}</td>
+      </tr>
+    </table>
+
+  {% else %}
+    {% if params.search %}
+      <h2>No result is found!</h2>
+    {% endif %}
+  {% endif %}
+{% endblock content %}

@@ -3,23 +3,23 @@
     {# {{ transcript_search_form.non_field_errors|safe }} #}
 
     <div class="field_wrapper">
-      {{ transcript_search_form.line.errors|safe }}
+      {# {{ transcript_search_form.line.errors|safe }} #}
       <label for="id_line">Line</label>
       {{ transcript_search_form.line|safe }}
     </div>
 
     <div class="field_wrapper">
-      {{ transcript_search_form.seqname.errors }}
+      {# {{ transcript_search_form.seqname.errors|safe }} #}
       <label for="id_seqname">Transcript Name</label>
       {{ transcript_search_form.seqname|safe }}
 
-      {{ transcript_search_form.refacc.errors }}
+      {# {{ transcript_search_form.refacc.errors|safe }} #}
       <label for="id_refacc">Dmel. Accession</label>
       {{ transcript_search_form.refacc|safe }}
     </div>
 
     <div class="field_wrapper">
-      {{ transcript_search_form.refdes.errors }}
+      {# {{ transcript_search_form.refdes.errors|safe }} #}
       <label for="id_refdes">Dmel. Description</label>
       {{ transcript_search_form.refdes|safe }}
       (Support <a href="/bdorseq/help#boolean_fulltext_search" target="_blank">Boolean Full-Text Searches</a>)
@@ -27,13 +27,13 @@
     </div>
 
     <div class="field_wrapper">
-      {{ transcript_search_form.seq.errors }}
+      {# {{ transcript_search_form.seq.errors|safe }} #}
       <label for="id_seq">Transcript Sequence</label>
       {{ transcript_search_form.seq|safe }}
     </div>
 
     <div class="field_wrapper">
-      {{ transcript_search_form.items_per_page.errors }}
+      {# {{ transcript_search_form.items_per_page.errors|safe }} #}
       <label for="id_items_per_page">Items per page</label>
       {{ transcript_search_form.items_per_page|safe }}
     </div>

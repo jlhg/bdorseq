@@ -6,3 +6,19 @@ table, tr, th, td {
 th {
     white-space: nowrap;
 }
+
+.alignment {
+    padding-top: 20px;
+    padding-left: 20px;
+    font-size: 10pt;
+    font-family: 'Droid Sans Mono', sans-serif;
+}
+
+#header {
+    font-size: 20pt;
+    font-family: 'Droid Sans Mono', sans-serif;
+}
+
+#footer {
+    padding-top: 10px;
+}

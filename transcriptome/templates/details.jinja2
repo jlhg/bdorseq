@@ -1,5 +1,13 @@
 {% extends "base.jinja2" %}
 
+{% block title %}
+  {% if transcript.seqname is defined %}
+    Details - {{ transcript.seqname }}
+  {% else %}
+    Details
+  {% endif %}
+{% endblock title %}
+
 {# Set variables: Blast results #}
 {% if transcript.homology_set.all().exists() %}
   {% set homology = transcript.homology_set.all().0 %}
@@ -17,118 +25,99 @@
   {% set hit_description = homology.hit_description %}
 {% endif %}
 
-{% if account_status == 'active' %}
-  {% block logout %}
-    {% include "logout_form.jinja2" %}
-  {% endblock logout %}
+{% block header %}
+{% endblock header %}
+{% block menu %}
+{% endblock menu %}
 
-  {% block search %}
-    {% include "transcript_search_form.jinja2"  %}
-  {% endblock search %}
+{% block content %}
+  <div class="details">
+    <h1>Transcript Details</h1>
 
-  <div>
-  {% block content %}
-    <div class="details">
-      <h1>Transcript Details</h1>
+    <div class="details-table">
+      <table width="800">
+        <thead>
+          <tr>
+            <th colspan="4">General Information</th>
+          </tr>
+        </thead>
 
-      <div class="details-table">
-        <table width="800">
-          <thead>
-            <tr>
-              <th colspan="4">General Information</th>
-            </tr>
-          </thead>
+        <tbody>
+          <tr>
+            <th>Transcript Name</th>
+            <td>{{ transcript.seqname }}</td>
+            <th>Species</th>
+            <td>{{ transcript.species }}</td>
+          </tr>
+          <tr>
+            <th>Line</th>
+            <td>{{ transcript.line }}</td>
+            <th>Sequencing Platform</th>
+            <td>{{ transcript.platform }}</td>
+          </tr>
+        </tbody>
 
-          <tbody>
-            <tr>
-              <th>Transcript Name</th>
-              <td>{{ transcript.seqname }}</td>
-              <th>Species</th>
-              <td>{{ transcript.species }}</td>
-            </tr>
-            <tr>
-              <th>Line</th>
-              <td>{{ transcript.line }}</td>
-              <th>Sequencing Platform</th>
-              <td>{{ transcript.platform }}</td>
-            </tr>
-          </tbody>
+        <thead>
+          <tr>
+            <th colspan="4">Homological Information</th>
+          </tr>
+        </thead>
 
-          <thead>
-            <tr>
-              <th colspan="4">Homological Information</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <th>Dmel. Accession</th>
-              <td colspan="3">{{ hit_name }}</td>
-            </tr>
-            <tr>
-              <th>Dmel. Description</th>
-              <td colspan="3">{{ hit_description }}</td>
-            </tr>
-            <tr>
-              <th>Query Length</th>
-              <td>{{ query_length }}</td>
-              <th>Hit Length</th>
-              <td>{{ hit_length}}</td>
-            </tr>
-            <tr>
-              <th>Query Frame</th>
-              <td>{{ query_frame }}</td>
-              <th>Hsp Length</th>
-              <td>{{ hsp_length}}</td>
-            </tr>
-            <tr>
-              <th>Hsp Score</th>
-              <td>{{ hsp_score }}</td>
-              <th>Hsp Gaps</th>
-              <td>{{ hsp_gaps }}</td>
-            </tr>
-            <tr>
-              <th>Hsp E-value</th>
-              {% if hsp_evalue is not defined %}
-                <td></td>
-              {% elif hsp_evalue > 0 %}
-                <td>{{ '%.3e' % hsp_evalue }}</td>
-              {% else %}
-                <td>0</td>
-              {% endif %}
-              <th>Hsp Identity (%)</th>
-              <td>{{ hsp_identity_percent }}</td>
-            </tr>
-            <tr>
-              <th>Query Coverage (%)</th>
+        <tbody>
+          <tr>
+            <th>Dmel. Accession</th>
+            <td colspan="3"><a href="/bdorseq/archive/?line={{ transcript.line }}&refacc={{ hit_name }}">{{ hit_name }}</a></td>
+          </tr>
+          <tr>
+            <th>Dmel. Description</th>
+            <td colspan="3">{{ hit_description }}</td>
+          </tr>
+          <tr>
+            <th>Query Length</th>
+            <td>{{ query_length }}</td>
+            <th>Hit Length</th>
+            <td>{{ hit_length}}</td>
+          </tr>
+          <tr>
+            <th>Query Frame</th>
+            <td>{{ query_frame }}</td>
+            <th>Hsp Length</th>
+            <td>{{ hsp_length}}</td>
+          </tr>
+          <tr>
+            <th>Hsp Score</th>
+            <td>{{ hsp_score }}</td>
+            <th>Hsp Gaps</th>
+            <td>{{ hsp_gaps }}</td>
+          </tr>
+          <tr>
+            <th>Hsp E-value</th>
+            {% if hsp_evalue is not defined %}
+              <td></td>
+            {% elif hsp_evalue > 0 %}
+              <td>{{ '%.3e' % hsp_evalue }}</td>
+            {% else %}
+              <td>0</td>
+            {% endif %}
+            <th>Hsp Identity (%)</th>
+            <td>{{ hsp_identity_percent }}</td>
+          </tr>
+          <tr>
+            <th>Query Coverage (%)</th>
               <td>{{ query_coverage }}</td>
               <th>Hit Coverage (%)</th>
               <td>{{ hit_coverage }}</td>
-            </tr>
+          </tr>
 
 
-            <tr>
-              <th colspan="4">Pairwise Alignment</th>
-            </tr>
-            <tr>
-              <td colspan="4" style="font-family: courier">{{ alignment_protein_html|safe }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+          <tr>
+            <th colspan="4">Pairwise Alignment</th>
+          </tr>
+          <tr>
+            <td colspan="4" style="font-family: courier">{{ alignment_protein_html|safe }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  {% endblock content %}
-
-{% else %}
-  {% block login %}
-  {% if account_status == 'expired' %}
-    <p>Please login to use database.</p>
-    {% include "login_form.jinja2" %}
-
-  {% elif account_status == 'invalid' %}
-    <p>Invalid user!</p>
-    {% include "login_form.jinja2" %}
-
-  {% endif %}
-  {% endblock login %}
-{% endif %}
+  </div>
+{% endblock content %}

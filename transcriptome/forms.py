@@ -34,7 +34,7 @@ class TranscriptSearchForm(forms.Form):
                                        required=False)
 
 
-class ArchiveForm(forms.Form):
+class ArchiveSearchForm(forms.Form):
     line = forms.ChoiceField(initial={'ss_old', 'SS/Hsu1'},
                              choices=[('ss_old', 'SS/Hsu1'),
                                       ('ss_new', 'SS/Hsu2'),
@@ -49,7 +49,7 @@ class ArchiveForm(forms.Form):
                                       ('rc_fen', 'RC/Fenthion'),
                                       ('rc_met', 'RC/Methomyl')],
                              required=False)
-    refacc = forms.CharField(max_length=15, required=True)
+    refacc = forms.CharField(max_length=15, required=False)
 
 
 class ExportTranscriptListForm(forms.Form):

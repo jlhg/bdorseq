@@ -14,10 +14,10 @@ import pdb
 
 @login_checker
 def index(request):
-    archive_form = forms.ArchiveForm()
+    archive_search_form = forms.ArchiveSearchForm()
     transcript_search_form = forms.TranscriptSearchForm()
     return render_to_response('index.jinja2',
-                              {'archive_form': archive_form,
+                              {'archive_search_form': archive_search_form,
                                'transcript_search_form': transcript_search_form},
                               context_instance=RequestContext(request))
 
@@ -31,8 +31,13 @@ def search(request):
         refacc = str(request.GET.get('refacc', '')).strip()
         refdes = str(request.GET.get('refdes', '')).strip()
         order = request.GET.get('order', 'seqname')
-        items_per_page = int(request.GET.get('items_per_page', 20))
+        items_per_page = request.GET.get('items_per_page', 20)
         page = int(request.GET.get('page', 1))
+
+        if not str(items_per_page).isdigit():
+            items_per_page = 20
+        else:
+            items_per_page = int(items_per_page)
 
         transcript_search_form = forms.TranscriptSearchForm(request.GET)
 
@@ -212,7 +217,6 @@ def export(request):
             response = HttpResponse(modelformatter.transcript_homology_to_blast(transcript_set), content_type='text/csv')
             response['Content-Disposition'] = 'attachment; filename=%s' % 'blast.txt'
             return response
-
         elif request.POST.get('export_rpkm'):
             # Exports rpkm data to TSV format file
             response = HttpResponse(modelformatter.transcript_to_expression(transcript_set), content_type='text/csv')
