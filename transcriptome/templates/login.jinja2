@@ -1,0 +1,42 @@
+{% extends "base.jinja2" %}
+
+{% block menu %}
+{% endblock menu %}
+
+{% block content %}
+{% if login_form is defined %}
+  {% if account_status == 'nologin' %}
+    <p>Welcome to Oriental Fruit Fly Database! Please login first.</p>
+  {% elif account_status == 'inactive' %}
+    <p>Inactive user!</p>
+  {% elif account_status == 'invalid' %}
+    <p>Invalid user!</p>
+  {% endif %}
+
+  {# {% if login_form.errors %} #}
+  {#   <p>Your username and password didn't match. Please try again.</p> #}
+  {# {% endif %} #}
+
+  <form action="/bdorseq/login/" method="post">{% csrf_token %}
+
+    {# {{ login_form.non_field_errors|safe }} #}
+
+    <div class="fieldWrapper">
+      {{ login_form.username.errors }}
+      <label for="id_username">User Name</label>
+      {{ login_form.username|safe }}
+    </div>
+
+    <div class="fieldWrapper">
+      {{ login_form.password.errors }}
+      <label for="id_password">Password</label>
+      {{ login_form.password|safe }}
+    </div>
+
+    <div class="fieldWrapper">
+      <input type="submit" value="Login" />
+      <input type="hidden" name="next" value={{ next }} />
+    </div>
+  </form>
+{% endif %}
+{% endblock content %}

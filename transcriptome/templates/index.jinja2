@@ -1,30 +1,21 @@
 {% extends "base.jinja2" %}
 
-{% if account_status == 'active' %}
-  {% block logout %}
-    {% include "logout_form.jinja2" %}
-  {% endblock logout %}
-
-  {% block search %}
-    {% include "transcript_search_form.jinja2" %}
-  {% endblock search %}
-
-{% else %}
-  {% block login %}
-    {% if account_status == 'expired' %}
-      <p>Please login to use database.</p>
-      {% include "login_form.jinja2" %}
-
-    {% elif account_status == 'invalid' %}
-      <p>Invalid user!</p>
-      {% include "login_form.jinja2" %}
-
-    {% endif %}
-  {% endblock login %}
-{% endif %}
+{% block menu %}
+  <p><a href="/bdorseq/logout/">Logout</a></p>
+{% endblock menu %}
 
 {% block content %}
-  {% block welcome_msg %}
-  <p>Welcome!</p>
-{% endblock welcome_msg %}
+  {% block archive %}
+    <h2>Archive</h2>
+
+    {% include "archive_form.jinja2" %}
+  {% endblock archive %}
+
+  {% block seqvar %}
+  {% endblock seqvar %}
+
+  {% block search %}
+    <h2>Download</h2>
+    {% include "transcript_search_form.jinja2" %}
+  {% endblock search %}
 {% endblock content %}

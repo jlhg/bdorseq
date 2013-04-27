@@ -1,10 +1,10 @@
 from django.conf.urls import patterns, url
-from transcriptome.views import transcript, document
+from transcriptome.views import accounts, transcript, document
 
 urlpatterns = patterns('',
                        url(r'^$', transcript.index, name='index'),
-                       url(r'^login/', transcript.signin, name='signin'),
-                       url(r'^logout/', transcript.signout, name='signout'),
+                       url(r'^login/', accounts.signin, name='signin'),
+                       url(r'^logout/', accounts.signout, name='signout'),
                        url(r'^search/', transcript.search, name='search'),
                        url(r'^export/', transcript.export, name='export'),
                        url(r'^help/', document.help, name='help'),

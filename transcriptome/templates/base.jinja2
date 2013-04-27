@@ -22,27 +22,17 @@
 
   <div id="header">
     {% block header %}
+      <p>Oriental Fruit Fly Database</p>
     {% endblock header %}
   </div>
 
   <div id="menu">
     {% block menu %}
+      <p><a href="/bdorseq/">Home<a> |
+            <a href="/bdorseq/archive/">Archive</a> |
+            <a href="/bdorseq/search/">Download</a> |
+            <a href="/bdorseq/logout/">Logout</a></p>
     {% endblock menu %}
-  </div>
-
-  <div id="logout">
-    {% block logout %}
-    {% endblock logout %}
-  </div>
-
-  <div id="search">
-    {% block search %}
-    {% endblock search %}
-  </div>
-
-  <div id="login">
-    {% block login %}
-    {% endblock login %}
   </div>
 
   <div id="content">

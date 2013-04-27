@@ -1,20 +1,15 @@
 {% extends "base.jinja2" %}
 
-{% if account_status == 'active' %}
-  {% block logout %}
-    {% include "logout_form.jinja2" %}
-  {% endblock logout %}
+{% block content %}
+    {% block search %}
+      {% include "transcript_search_form.jinja2"  %}
+    {% endblock search %}
 
-  {% block search %}
-    {% include "transcript_search_form.jinja2"  %}
-  {% endblock search %}
-
-  <div>
-  {% block content %}
     <div>
       Search results: {{ search_count }} <br>
       Page: {{ pager.current_page }} / {{ pager.last_page }}
     </div>
+
     {% if pager.first_page == pager.last_page %}
       First
       Previous
@@ -77,19 +72,4 @@
         </table>
       </form>
     {% endblock export_form %}
-  {% endblock content %}
-  </div>
-
-{% else %}
-  {% block login %}
-  {% if account_status == 'expired' %}
-    <p>Please login to use database.</p>
-    {% include "login_form.jinja2" %}
-
-  {% elif account_status == 'invalid' %}
-    <p>Invalid user!</p>
-    {% include "login_form.jinja2" %}
-
-  {% endif %}
-  {% endblock login %}
-{% endif %}
+{% endblock content %}
