@@ -67,7 +67,7 @@ def search(request):
         pass
 
     if refacc:
-        search_options.append(Q(homology__hit_name_id__icontains=refacc))
+        search_options.append(Q(homology__hit_name_id__accession__icontains=refacc))
     else:
         pass
 
@@ -195,7 +195,7 @@ def export(request):
                 pass
 
             if refacc:
-                search_options.append(Q(homology__hit_name_id__icontains=refacc))
+                search_options.append(Q(homology__hit_name_id__accession__icontains=refacc))
             else:
                 pass
 
