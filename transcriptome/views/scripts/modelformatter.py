@@ -34,9 +34,14 @@ def transcript_homology_to_blast(transcript_objects):
 
     for obj in transcript_objects:
         if obj.homology_set.all().exists():
+            if obj.homology_set.all()[0].hsp_evalue == 0:
+                evalue = 0
+            else:
+                evalue = '%.3e' % obj.homology_set.all()[0].hsp_evalue
+
             tsv.append('\t'.join(map(str, [obj.homology_set.all()[0].tool,
                                            obj.homology_set.all()[0].query_name_id,
-                                           obj.homology_set.all()[0].hit_name,
+                                           obj.homology_set.all()[0].hit_name_id,
                                            obj.homology_set.all()[0].query_length,
                                            obj.homology_set.all()[0].query_hsp_start,
                                            obj.homology_set.all()[0].query_hsp_end,
@@ -49,7 +54,7 @@ def transcript_homology_to_blast(transcript_objects):
                                            obj.homology_set.all()[0].hit_frame,
                                            obj.homology_set.all()[0].hsp_score,
                                            obj.homology_set.all()[0].hsp_bits,
-                                           obj.homology_set.all()[0].hsp_evalue,
+                                           evalue,
                                            obj.homology_set.all()[0].hsp_length,
                                            obj.homology_set.all()[0].hsp_gaps,
                                            obj.homology_set.all()[0].hsp_identities,
