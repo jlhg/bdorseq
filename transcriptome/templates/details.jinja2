@@ -25,11 +25,6 @@
   {% set hit_description = homology.hit_description %}
 {% endif %}
 
-{% block header %}
-{% endblock header %}
-{% block menu %}
-{% endblock menu %}
-
 {% block content %}
   <div class="details">
     <h1>Transcript Details</h1>
@@ -66,7 +61,7 @@
         <tbody>
           <tr>
             <th>Dmel. Accession</th>
-            <td colspan="3"><a href="/bdorseq/archive/?line={{ transcript.line }}&refacc={{ hit_name }}">{{ hit_name }}</a></td>
+            <td colspan="3"><a href="http://www.ncbi.nlm.nih.gov/protein/{{ hit_name }}" target="_blank">{{ hit_name }}</a></td>
           </tr>
           <tr>
             <th>Dmel. Description</th>
