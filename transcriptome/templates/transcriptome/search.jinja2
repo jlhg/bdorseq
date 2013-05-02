@@ -1,4 +1,4 @@
-{% extends "base.jinja2" %}
+{% extends "transcriptome/base.jinja2" %}
 
 {% block title %}
   Download
@@ -6,7 +6,7 @@
 
 {% block content %}
     {% block search %}
-      {% include "transcript_search_form.jinja2"  %}
+      {% include "transcriptome/transcript_search_form.jinja2"  %}
     {% endblock search %}
 
     <div>

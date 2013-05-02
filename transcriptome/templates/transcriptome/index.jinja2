@@ -1,4 +1,4 @@
-{% extends "base.jinja2" %}
+{% extends "transcriptome/base.jinja2" %}
 
 {% block menu %}
   <p><a href="/bdorseq/logout/">Logout</a></p>
@@ -7,7 +7,7 @@
 {% block content %}
   {% block archive %}
     <h2>Archive</h2>
-    {% include "archive_search_form.jinja2" %}
+    {% include "transcriptome/archive_search_form.jinja2" %}
   {% endblock archive %}
 
   {% block seqvar %}
@@ -15,6 +15,6 @@
 
   {% block search %}
     <h2>Download</h2>
-    {% include "transcript_search_form.jinja2" %}
+    {% include "transcriptome/transcript_search_form.jinja2" %}
   {% endblock search %}
 {% endblock content %}

@@ -27,7 +27,7 @@ def signin(request):
 
                 else:
                     login_form = forms.LoginForm()
-                    return render_to_response('login.jinja2',
+                    return render_to_response('transcriptome/login.jinja2',
                                               {'login_form': login_form,
                                                'next': request.POST.get('next'),
                                                'account_status': 'inactive'},
@@ -35,14 +35,14 @@ def signin(request):
 
             else:
                 login_form = forms.LoginForm()
-                return render_to_response('login.jinja2',
+                return render_to_response('transcriptome/login.jinja2',
                                           {'login_form': login_form,
                                            'next': request.POST.get('next'),
                                            'account_status': 'invalid'},
                                           context_instance=RequestContext(request))
         else:
             login_form = forms.LoginForm()
-            return render_to_response('login.jinja2',
+            return render_to_response('transcriptome/login.jinja2',
                                       {'login_form': login_form,
                                        'account_status': 'nologin'},
                                       context_instance=RequestContext(request))

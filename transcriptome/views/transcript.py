@@ -16,7 +16,7 @@ import pdb
 def index(request):
     archive_search_form = forms.ArchiveSearchForm()
     transcript_search_form = forms.TranscriptSearchForm()
-    return render_to_response('index.jinja2',
+    return render_to_response('transcriptome/index.jinja2',
                               {'archive_search_form': archive_search_form,
                                'transcript_search_form': transcript_search_form},
                               context_instance=RequestContext(request))
@@ -114,7 +114,7 @@ def search(request):
         # Last page
         transcript_subset = transcript_set[(page - 1) * pager.get('items_per_page'): transcript_set.count()]
 
-    return render_to_response('search.jinja2',
+    return render_to_response('transcriptome/search.jinja2',
                               {'account_status': 'active',
                                'transcript_search_form': transcript_search_form,
                                'transcript_subset': transcript_subset,
@@ -146,7 +146,7 @@ def details(request, seqname):
     else:
         alignment_protein_html = ''
 
-    return render_to_response('details.jinja2',
+    return render_to_response('transcriptome/details.jinja2',
                               {'transcript': transcript,
                                'alignment_protein_html': alignment_protein_html},
                               context_instance=RequestContext(request))

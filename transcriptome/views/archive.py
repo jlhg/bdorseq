@@ -84,7 +84,7 @@ def search(request):
 
         if not align_dna_set:
             # No matched results
-            return render_to_response('archive.jinja2',
+            return render_to_response('transcriptome/archive.jinja2',
                                       {'archive_search_form': archive_search_form,
                                        'params': request.GET},
                                       context_instance=RequestContext(request))
@@ -99,7 +99,7 @@ def search(request):
             multiple_protein_alignment = alignment.multiple_protein(*align_protein_set)
             multiple_protein_alignment_html = formatter.clustal_to_html(multiple_protein_alignment, 'a')
 
-            return render_to_response('archive.jinja2',
+            return render_to_response('transcriptome/archive.jinja2',
                                       {'archive_search_form': archive_search_form,
                                        'select_status': select_status,
                                        'homology_subset': homology_subset,
@@ -110,7 +110,7 @@ def search(request):
 
     else:
         # No matched results
-        return render_to_response('archive.jinja2',
+        return render_to_response('transcriptome/archive.jinja2',
                                   {'archive_search_form': archive_search_form,
                                    'params': request.GET},
                                   context_instance=RequestContext(request))

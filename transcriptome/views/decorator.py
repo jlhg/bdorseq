@@ -7,7 +7,7 @@ def login_checker(view_func):
     def wrap(request, *args, **kwargs):
         if not request.user.is_authenticated():
             login_form = forms.LoginForm()
-            return render_to_response('login.jinja2',
+            return render_to_response('transcriptome/login.jinja2',
                                       {'login_form': login_form,
                                        'next': request.get_full_path(),
                                        'account_status': 'nologin'},

@@ -1,4 +1,4 @@
-{% extends "base.jinja2" %}
+{% extends "transcriptome/base.jinja2" %}
 {% block title %}
   {% if params.refacc is defined %}
     Archive - {{ params.refacc }}
@@ -9,7 +9,7 @@
 
 {% block content %}
   {% block search %}
-    {% include "archive_search_form.jinja2" %}
+    {% include "transcriptome/archive_search_form.jinja2" %}
   {% endblock search %}</br>
 
   {% if homology_subset is defined %}
