@@ -1,51 +1,43 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!DOCTYPE html>
+<meta charset="utf-8">
 
-<head>
-  {% block head %}
-    {% load staticfiles %}
-    <link rel="stylesheet" href="{{ STATIC_URL ~ 'transcriptome/css/style.css' }}" />
-    <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
-    {# <script type="text/javascript" src="{{ STATIC_URL ~ 'js/main.js' }}"></script> #}
+{% load staticfiles %}
+<link rel="stylesheet" href="{{ STATIC_URL ~ 'transcriptome/css/style.css' }}">
+<link href="//fonts.googleapis.com/css?family=Droid+Sans+Mono" rel="stylesheet" type="text/css">
+{# <script type="text/javascript" src="{{ STATIC_URL ~ 'js/main.js' }}"></script> #}
 
-    <title>
-      {% block title %}
-        Home
-      {% endblock title %}
-      - Oriental Fruit Fly Transcriptome Database
-    </title>
+<title>
+  {% block title %}
+    Home
+  {% endblock title %}
+  - Oriental Fruit Fly Transcriptome Database
+</title>
 
-  {% endblock head %}
-</head>
+<div id="header">
+  {% block header %}
+    <p>Oriental Fruit Fly Database</p>
+  {% endblock header %}
+</div>
 
-<body>
-  {% block body %}
+<div id="menu">
+  {% block menu %}
+    <p>
+      <a href="/bdorseq/">Home<a> |
+      <a href="/bdorseq/archive/">Archive</a> |
+      <a href="/bdorseq/search/">Download</a> |
+      <a href="/bdorseq/logout/">Logout</a>
+    </p>
+  {% endblock menu %}
+</div>
 
-  <div id="header">
-    {% block header %}
-      <p>Oriental Fruit Fly Database</p>
-    {% endblock header %}
-  </div>
+<div id="content">
+  {% block content %}
+  {% endblock content %}
+</div>
 
-  <div id="menu">
-    {% block menu %}
-      <p><a href="/bdorseq/">Home<a> |
-            <a href="/bdorseq/archive/">Archive</a> |
-            <a href="/bdorseq/search/">Download</a> |
-            <a href="/bdorseq/logout/">Logout</a></p>
-    {% endblock menu %}
-  </div>
-
-  <div id="content">
-    {% block content %}
-    {% endblock content %}
-  </div>
-
-  <div id="footer">
-    {% block footer %}
+<div id="footer">
+  {% block footer %}
     Oriental Fruit Fly Transcriptome Database v2.1</br>
     Supported by c4Lab
-    {% endblock footer %}
-  </div>
-
-  {% endblock body %}
-</body>
+  {% endblock footer %}
+</div>
