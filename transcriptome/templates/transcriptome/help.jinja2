@@ -1,31 +1,73 @@
 <h1>Help</h1>
 <a name="seqname"><h2>Isotig Nomenclature</h2></a>
-Example:</br>
+Example:<br>
 <p>BDSSOLD1.68.1</p>
-BD: Bactrocera dorsalis</br>
-SS: Susceptible</br>
-OLD: Class or insecticide name</br>
-1: isogroup id</br>
-68: total number of isotigs in the isogroup</br>
-1: isotig id</br>
-</br>
+BD: Bactrocera dorsalis<br>
+SS: Susceptible<br>
+OLD: Class or insecticide name<br>
+1: isogroup id<br>
+68: total number of isotigs in the isogroup<br>
+1: isotig id<br>
+<br>
+
+<a name="download_options"><h2>Download Options</h2></a>
+<h3>Download FASTA</h3>
+Download the sequnece of selected transcript(s) (FASTA format)<br>
+<h3>Download BLAST</h3>
+Download the blast results of selected transcript(s) against reference protein (TSV format)<br>
+<h4>Output description</h4>
+tool: blast tool name<br>
+query_name: transcript sequence name<br>
+hit_name: reference protein accession<br>
+query_length: the length of the query sequence<br>
+query_hsp_start: offset of query at the start of the alignment (one-offset)<br>
+query_hsp_end: offset of query at the end of the alignment (one-offset)<br>
+query_strand: the strand direction of the query sequence if applicable<br>
+query_frame: frame of the query if applicable<br>
+hsp_score: score (in bits) of the HSP<br>
+hsp_bits: number of bits for that score<br>
+hsp_evalue: expect value of the HSP<br>
+hsp_length: length of the alignment<br>
+hsp_gaps: number of gaps in the alignment<br>
+hsp_identities: number of identities in the alignment<br>
+hsp_identity_percent: percentage of identities in the alignment<br>
+hsp_positives: number of positive (conservative) substitutions in the alignment<br>
+hsp_positive_percent: percentage of positive (conservative) substitutions in the alignment<br>
+query_coverage: the alignment coverage of the query sequence<br>
+hit_coverage: the alignment coverage of the reference protein<br>
+hit_description: the description of the reference protein<br>
+
+<h3>Download Gene Expression</h3>
+Download the rpkm data of selected transcripts(s) (TSV format)
+<h4>Output description</h4>
+feature_id: transcript sequence name<br>
+gene_length: transcript sequence length<br>
+ss_rpkm: the RPKM value with susceptible reads mapped to reference<br>
+rs_rpkm: the RPKM value with resistant reads mapped to reference<br>
+rc_rpkm: the PRKM value with recovered reads mapped to reference<br>
+rs_ss_ratio: rs_rpkm / ss_rpkm<br>
+rs_rc_ratio: rs_rpkm / rc_rpkm<br>
+expression: up if both rs_ss_ratio and rs_rc_ratio are greater than 2; down if both are less than 0.5<br>
+line: the line of the transcript<br>
+insecticide: the type of insecticide of the mapped reads<br>
+annotation: the description of the reference protein<br>
 
 <a name="boolean_fulltext_search"><h2>Boolean Full-Text Searches</h2></a>
-Example 1: Search for P450 protein</br>
-Input: p450</br>
-</br>
-Example 2: Search for larval serum protein</br>
-Input: "larval serum protein"</br>
-</br>
-Example 3: Search for larval serum protein or yolk protein</br>
-Input: "larval serum protein" "yolk protein"</br>
-</br>
-Example 4: Search for larval serum protein but not yolk protein </br>
-Input: "larval serum protein" -"yolk protein"</br>
-</br>
-Example 5: Search for larval serum protein and yolk protein (in the same row)</br>
-Input: +"larval serum protein" +"yolk protein"</br>
-</br>
-Example 6: Search for any words that begin with cyto </br>
-Input: cyto* </br>
-</br>
+Example 1: Search for P450 protein<br>
+Input: p450<br>
+<br>
+Example 2: Search for larval serum protein<br>
+Input: "larval serum protein"<br>
+<br>
+Example 3: Search for larval serum protein or yolk protein<br>
+Input: "larval serum protein" "yolk protein"<br>
+<br>
+Example 4: Search for larval serum protein but not yolk protein <br>
+Input: "larval serum protein" -"yolk protein"<br>
+<br>
+Example 5: Search for larval serum protein and yolk protein (in the same row)<br>
+Input: +"larval serum protein" +"yolk protein"<br>
+<br>
+Example 6: Search for any words that begin with cyto <br>
+Input: cyto* <br>
+<br>
