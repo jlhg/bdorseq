@@ -38,7 +38,7 @@ class ArchiveSearchForm(forms.Form):
     line = forms.ChoiceField(initial='ss_old',
                              choices=[('ss_old', 'SS/Hsu1'),
                                       ('ss_new', 'SS/Hsu2'),
-                                      # ('ss_chi', 'SS/China'),
+                                      ('ss_chi', 'SS/China'),
                                       ('rs_for', 'RS/Formothion'),
                                       ('rs_fen', 'RS/Fenthion'),
                                       ('rs_met', 'RS/Methomyl'),
