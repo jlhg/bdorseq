@@ -18,6 +18,11 @@ def transcript_homology_to_blast(transcript_objects):
                           'query_hsp_end',
                           'query_starnd',
                           'query_frame',
+                          'hit_length'
+                          'hit_hsp_start',
+                          'hit_hsp_end',
+                          'hit_strand',
+                          'hit_frame',
                           'hsp_score',
                           'hsp_bits',
                           'hsp_evalue',

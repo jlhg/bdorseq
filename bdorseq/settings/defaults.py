@@ -161,3 +161,4 @@ LOGGING = {
 
 LOGIN_URL = '/bdorseq/login/'
 LOGOUT_URL = '/bdorseq/logout/'
+FTP_URL = ''
