@@ -14,7 +14,13 @@
   {% endblock seqvar %}
 
   {% block search %}
-    <h2>Download</h2>
+    <h2>Browse</h2>
     {% include "transcriptome/transcript_search_form.jinja2" %}
   {% endblock search %}
+
+  {% block releases %}
+    <h2>Releases (FTP)</h2>
+    Go <a href="{{ FTP_URL }}" target="_blank">here</a> for large file download.
+  {% endblock releases %}
+
 {% endblock content %}
