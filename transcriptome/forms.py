@@ -31,8 +31,7 @@ class TranscriptSearchForm(forms.Form):
                                        choices=[(20, '20'),
                                                 (50, '50'),
                                                 (100, '100'),
-                                                (200, '200')],
-                                       required=False)
+                                                (200, '200')])
 
 
 class ArchiveSearchForm(forms.Form):
@@ -43,13 +42,25 @@ class ArchiveSearchForm(forms.Form):
                                       ('rs_for', 'RS/Formothion'),
                                       ('rs_fen', 'RS/Fenthion'),
                                       ('rs_met', 'RS/Methomyl'),
-                                      # ('rs_mal', 'RS/Malathion'),
-                                      # ('rs_nal', 'RS/Naled'),
-                                      # ('rs_tri', 'RS/Trichlorfon'),
+                                      ('rs_mal', 'RS/Malathion'),
+                                      ('rs_nal', 'RS/Naled'),
+                                      ('rs_tri', 'RS/Trichlorfon'),
                                       ('rc_for', 'RC/Formothion'),
                                       ('rc_fen', 'RC/Fenthion'),
-                                      ('rc_met', 'RC/Methomyl')],
-                             required=False)
+                                      ('rc_met', 'RC/Methomyl')])
+    refacc = forms.CharField(max_length=15, required=False)
+
+
+class SequenceVariationSearchForm(forms.Form):
+    intersection = forms.ChoiceField(initial='',
+                                     choices=[('', 'Unlimited'),
+                                              ('for', 'Formothion'),
+                                              ('fen', 'Fenthion'),
+                                              ('met', 'Methomyl'),
+                                              ('for_fen', 'Formothion/Fenthion'),
+                                              ('for_met', 'Formothion/Methomyl'),
+                                              ('fen_met', 'Fenthion/Methomyl'),
+                                              ('for_fen_metm', 'Formothion/Fenthion/Methomyl')])
     refacc = forms.CharField(max_length=15, required=False)
 
 
