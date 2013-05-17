@@ -1,4 +1,7 @@
 def clustal_to_html(clustal_content, seqtype):
+    """
+    seqtype: n or a
+    """
     match_table = {'*': '<span class="ast">*</span>',
                    '.': '<span class="dot">.</span>',
                    ':': '<span class="col">:</span>',
@@ -49,3 +52,7 @@ def clustal_to_html(clustal_content, seqtype):
     html.append('</div>')
 
     return ''.join(html)
+
+
+def clustal_to_html_sv(clustal_content, seqtype):
+    pass

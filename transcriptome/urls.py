@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url
 from transcriptome.views import accounts, transcript, document, archive
+from transcriptome.views import seqvar
 
 urlpatterns = patterns('',
                        url(r'^$', transcript.index, name='index'),
@@ -9,5 +10,7 @@ urlpatterns = patterns('',
                        url(r'^export/', transcript.export, name='export'),
                        url(r'^help/', document.help, name='help'),
                        url(r'^details/(?P<seqname>[A-Z0-9.]+)/', transcript.details, name='details'),
-                       url(r'^archive/', archive.search, name='archive')
+                       url(r'^archive/', archive.search, name='archive'),
+                       url(r'^seqvar/search/', seqvar.search, name='svsearch'),
+                       url(r'^seqvar/(?P<commonset>[a-z_]+)/(?P<refacc>[A-Z0-9._]+)/', seqvar.details, name='svdetail'),
                        )

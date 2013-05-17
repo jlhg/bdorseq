@@ -52,15 +52,14 @@ class ArchiveSearchForm(forms.Form):
 
 
 class SequenceVariationSearchForm(forms.Form):
-    intersection = forms.ChoiceField(initial='',
-                                     choices=[('', 'Unlimited'),
-                                              ('for', 'Formothion'),
-                                              ('fen', 'Fenthion'),
-                                              ('met', 'Methomyl'),
-                                              ('for_fen', 'Formothion/Fenthion'),
-                                              ('for_met', 'Formothion/Methomyl'),
-                                              ('fen_met', 'Fenthion/Methomyl'),
-                                              ('for_fen_metm', 'Formothion/Fenthion/Methomyl')])
+    commonset = forms.ChoiceField(initial='for',
+                                  choices=[('for', 'Formothion'),
+                                           ('fen', 'Fenthion'),
+                                           ('met', 'Methomyl'),
+                                           ('for_fen', 'Formothion/Fenthion'),
+                                           ('for_met', 'Formothion/Methomyl'),
+                                           ('fen_met', 'Fenthion/Methomyl'),
+                                           ('for_fen_metm', 'Formothion/Fenthion/Methomyl')])
     refacc = forms.CharField(max_length=15, required=False)
 
 
