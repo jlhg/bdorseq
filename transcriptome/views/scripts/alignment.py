@@ -102,6 +102,8 @@ def multiple_protein(*args):
     mafft_cmd = 'mafft --preservecase --clustalout --namelength ' + str(namelength) + ' ' + input_file.name
     mafft_proc = Popen(mafft_cmd, stdout=PIPE, stderr=PIPE, shell=True)
 
+    input_file.close()
+
     stdout, stderr = mafft_proc.communicate()
 
     return stdout

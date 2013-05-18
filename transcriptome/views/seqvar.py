@@ -2,11 +2,13 @@ from operator import __or__ as OR
 from django.http import Http404, HttpResponseRedirect
 from django.db.models import Q
 from django.template import RequestContext
+from django.core.files.temp import NamedTemporaryFile
 from coffin.shortcuts import render_to_response
 from transcriptome import forms
 from transcriptome.views.decorator import login_checker
 from transcriptome.models import Msap, CommonMutation, Transcript
-from scripts import alignment, formatter
+from scripts import alignment
+from scripts import msaparser
 
 
 @login_checker
@@ -33,7 +35,7 @@ def search(request):
     for insecticide in commonset.split('_'):
         queries.append(cs_option.get(insecticide))
 
-    query_set = CommonMutation.objects.filter(*insecticides)
+    query_set = CommonMutation.objects.filter(*insecticides).order_by(order)
 
     # for common_mutation in common_mutation_set:
     #     commonset_queries.append(Q(hit_name=common_mutation.hit_name))
@@ -57,6 +59,7 @@ def details(request, commonset, refacc):
 
     alignment_results = {}
     msaps = {}
+    parser = msaparser.Parser()
 
     for insecticide in commonset.split('_'):
         try:
@@ -72,27 +75,34 @@ def details(request, commonset, refacc):
             rs_transcript = Transcript.objects.get(seqname=msap.rs_name)
             rc_transcript = Transcript.objects.get(seqname=msap.rc_name)
 
-            alignment_result_dna = alignment.multiple_dna([(ss_transcript.seqname,
-                                                            0,
-                                                            ss_transcript.seq),
-                                                           (rs_transcript.seqname,
-                                                            0,
-                                                            rs_transcript.seq),
-                                                           (rc_transcript.seqname,
-                                                            0,
-                                                            rc_transcript.seq)])
-            alignment_result_protein = alignment.multiple_protein([(ss_transcript.seqname,
-                                                                    ss_transcript.homology.query_frame,
-                                                                    ss_transcript.seq),
-                                                                   (rs_transcript.seqname,
-                                                                    rs_transcript.homology.query_frame,
-                                                                    rs_transcript.seq),
-                                                                   (rc_transcript.seqname,
-                                                                    rc_transcript.homology.query_frame,
-                                                                    rc_transcript.seq)])
+            alignment_result_dna = NamedTemporaryFile(prefix='clu_')
+            alignment_result_dna.write(alignment.multiple_dna([(ss_transcript.seqname,
+                                                                0,
+                                                                ss_transcript.seq),
+                                                               (rs_transcript.seqname,
+                                                                0,
+                                                                rs_transcript.seq),
+                                                               (rc_transcript.seqname,
+                                                                0,
+                                                                rc_transcript.seq)]))
+            alignment_result_dna.flush()
 
-            alignment_results.update({insecticide: (formatter.clustal_to_html_sv(alignment_result_dna, 'n'),
-                                                    formatter.clustal_to_html_sv(alignment_result_protein, 'a'))})
+            alignment_result_protein = NamedTemporaryFile(prefix='clu_')
+            alignment_result_protein.write(alignment.multiple_protein([(ss_transcript.seqname,
+                                                                        ss_transcript.homology.query_frame,
+                                                                        ss_transcript.seq),
+                                                                       (rs_transcript.seqname,
+                                                                        rs_transcript.homology.query_frame,
+                                                                        rs_transcript.seq),
+                                                                       (rc_transcript.seqname,
+                                                                        rc_transcript.homology.query_frame,
+                                                                        rc_transcript.seq)]))
+            alignment_result_protein.flush()
+
+            alignment_results.update({insecticide: (parser.parse(alignment_result_dna.name, 'n').get_clustal_html(),
+                                                    parser.parse(alignment_result_protein.name, 'a').get_clustal_html())})
+            alignment_result_dna.close()
+            alignment_result_protein.close()
 
     return render_to_response('transcriptome/svdetails.jinja2',
                               {'msaps': msaps,
