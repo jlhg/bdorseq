@@ -53,6 +53,7 @@ def search(request):
         'fen': Q(commonmutation__fenthion=1),
         'met': Q(commonmutation__methomyl=1),
         'for_fen': Q(commonmutation__for_fen=1),
+        'for_met': Q(commonmutation__for_met=1),
         'fen_met': Q(commonmutation__fen_met=1),
         'for_fen_met': Q(commonmutation__for_fen_met=1),
     }

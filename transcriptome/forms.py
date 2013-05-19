@@ -59,7 +59,7 @@ class SequenceVariationSearchForm(forms.Form):
                                            ('for_fen', 'For/Fen'),
                                            ('for_met', 'For/Met'),
                                            ('fen_met', 'Fen/Met'),
-                                           ('for_fen_metm', 'For/Fen/Met')])
+                                           ('for_fen_met', 'For/Fen/Met')])
     refacc = forms.CharField(max_length=15, required=False)
     refdes = forms.CharField(required=False)
     items_per_page = forms.ChoiceField(initial=20,
