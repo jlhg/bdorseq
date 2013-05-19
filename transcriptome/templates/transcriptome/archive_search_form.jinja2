@@ -7,7 +7,7 @@
       <label for="id_line">Line</label>
       {{ archive_search_form.line|safe }}
 
-      {{ archive_search_form.refacc.errors }}
+      {{ archive_search_form.refacc.errors|safe }}
       <label for="id_refacc">Dmel. Accession</label>
       {{ archive_search_form.refacc|safe }}
     </div>

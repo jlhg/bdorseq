@@ -36,7 +36,10 @@ def search(request):
                 # No selected items
                 align_type = 'all'
 
-        archive_search_form = forms.ArchiveSearchForm(request.GET)
+        if request.GET.get('line'):
+            archive_search_form = forms.ArchiveSearchForm(request.GET)
+        else:
+            archive_search_form = forms.ArchiveSearchForm()
 
     else:
         raise Http404

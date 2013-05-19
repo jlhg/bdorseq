@@ -1,7 +1,10 @@
 {% extends "transcriptome/base.jinja2" %}
 
 {% block menu %}
-  <p><a href="/bdorseq/logout/">Logout</a></p>
+  <p>
+    <a href="/bdorseq/help" target="_blank">Help</a> |
+    <a href="/bdorseq/logout/">Logout</a>
+  </p>
 {% endblock menu %}
 
 {% block content %}
@@ -16,7 +19,7 @@
   {% endblock search %}
 
   {% block seqvar %}
-    <h2>Browse: Sequence Variation</h2>
+    <h2>Sequence Variation</h2>
     {% include "transcriptome/sequence_variation_search_form.jinja2" %}
   {% endblock seqvar %}
 

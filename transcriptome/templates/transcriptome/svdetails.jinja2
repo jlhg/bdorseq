@@ -1,29 +1,134 @@
 {% extends "transcriptome/base.jinja2" %}
 
 {% block title %}
-  {# {% if transcript.seqname is defined %} #}
-  {#   Details - {{ transcript.seqname }} #}
-  {# {% else %} #}
-  {#   Details #}
-  {# {% endif %} #}
+    SV Details - {{ commonset ~ ' - ' ~ refacc }}
 {% endblock title %}
 
+{% block header %}
+  {{ super() }}
+  <a name="top">
+{% endblock header %}
 
 {% block content %}
-  <table width="800">
-    {% if alignment_results.for is defined %}
-      <tr>
-        <th>DNA Multiple Sequence Alignment</th>
-      </tr>
-      <tr>
-        <td>{{ alignment_results.for.0|safe }}</td>
-      </tr>
-      <tr>
-        <th>Protein Multiple Sequence Alignment</th>
-      </tr>
-      <tr>
-        <td>{{ alignment_results.for.1|safe }}</td>
-      </tr>
-    {% endif %}
-  </table>
+  {% block search %}
+    {% include "transcriptome/sequence_variation_search_form.jinja2" %}
+  {% endblock search %}
+  <div class="svdetails">
+    <h1>Sequence Variation Details</h1>
+
+    <div class="svdetails-table">
+      <table>
+        <tbody>
+          <tr>
+            <th>Set</th>
+            <td>{{ commonset }}</td>
+          </tr>
+          <tr>
+            <th>Dmel. Accession</th>
+            <td>{{ refacc }}</td>
+          </tr>
+          <tr>
+            <th>Dmel. Description</th>
+            <td>{{ refdes }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+
+      <table width="900">
+        <thead>
+          <tr>
+            <th>Insecticide</th>
+            <th>Ss. Name</th>
+            <th>Rs. Name</th>
+            <th>Rc. Name</th>
+            <th>Point Mutation</th>
+            <th>Mut. Profile</th>
+            <th>Mut. Position</th>
+            <th>Block</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% if msaps.for is defined %}
+            <tr>
+              <td><a href="#for">Formothion</a></td>
+              <td>{{ msaps.for.ss_name_id }}</td>
+              <td>{{ msaps.for.rs_name_id }}</td>
+              <td>{{ msaps.for.rc_name_id }}</td>
+              <td>{{ msaps.for.mut_num }}</td>
+              <td>{{ msaps.for.mut_pos }}</td>
+              <td>{{ msaps.for.mut_profile }}</td>
+              <td>{{ msaps.for.block }}</td>
+            </tr>
+          {% endif %}
+          {% if msaps.fen is defined %}
+            <tr>
+              <td><a href="#fen">Fenthion</a></td>
+              <td>{{ msaps.fen.ss_name_id }}</td>
+              <td>{{ msaps.fen.rs_name_id }}</td>
+              <td>{{ msaps.fen.rc_name_id }}</td>
+              <td>{{ msaps.fen.mut_num }}</td>
+              <td>{{ msaps.fen.mut_pos }}</td>
+              <td>{{ msaps.fen.mut_profile }}</td>
+              <td>{{ msaps.fen.block }}</td>
+            </tr>
+          {% endif %}
+          {% if msaps.met is defined %}
+            <tr>
+              <td><a href="#met">Methomyl</a></td>
+              <td>{{ msaps.met.ss_name_id }}</td>
+              <td>{{ msaps.met.rs_name_id }}</td>
+              <td>{{ msaps.met.rc_name_id }}</td>
+              <td>{{ msaps.met.mut_num }}</td>
+              <td>{{ msaps.met.mut_pos }}</td>
+              <td>{{ msaps.met.mut_profile }}</td>
+              <td>{{ msaps.met.block }}</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+      <br>
+
+      <table width="1500">
+        {% if alignment_results.for is defined %}
+          <a name="for">
+          <a href="#top">Back to Top</a>
+          <tr>
+            <th>(Formothion) Protein Multiple Sequence Alignment</th>
+            <th>(Formothion) DNA Multiple Sequence Alignment</th>
+          </tr>
+          <tr>
+            <td>{{ alignment_results.for.1|safe }}</td>
+            <td>{{ alignment_results.for.0|safe }}</td>
+          </tr>
+        {% endif %}
+        {% if alignment_results.fen is defined %}
+          <a name="fen">
+          <a href="#top">Back to Top</a>
+          <tr>
+            <th>(Fenthion) Protein Multiple Sequence Alignment</th>
+            <th>(Fenthion) DNA Multiple Sequence Alignment</th>
+          </tr>
+          <tr>
+            <td>{{ alignment_results.fen.1|safe }}</td>
+            <td>{{ alignment_results.fen.0|safe }}</td>
+          </tr>
+        {% endif %}
+        {% if alignment_results.met is defined %}
+          <a name="met">
+          <a href="#top">Back to Top</a>
+          <tr>
+            <th>(Methomyl) Protein Multiple Sequence Alignment</th>
+            <th>(Methomyl) DNA Multiple Sequence Alignment</th>
+          </tr>
+          <tr>
+            <td>{{ alignment_results.met.1|safe }}</td>
+            <td>{{ alignment_results.met.0|safe }}</td>
+          </tr>
+        {% endif %}
+
+      </table>
+    </div>
+  </div>
 {% endblock content %}
