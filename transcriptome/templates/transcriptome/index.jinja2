@@ -10,13 +10,15 @@
     {% include "transcriptome/archive_search_form.jinja2" %}
   {% endblock archive %}
 
-  {% block seqvar %}
-  {% endblock seqvar %}
-
   {% block search %}
-    <h2>Browse</h2>
+    <h2>Browse: Transcript</h2>
     {% include "transcriptome/transcript_search_form.jinja2" %}
   {% endblock search %}
+
+  {% block seqvar %}
+    <h2>Browse: Sequence Variation</h2>
+    {% include "transcriptome/sequence_variation_search_form.jinja2" %}
+  {% endblock seqvar %}
 
   {% block releases %}
     <h2>Releases (FTP)</h2>

@@ -1,0 +1,24 @@
+{% if sequence_variation_search_form %}
+    <form action="/bdorseq/seqvar/search/" method="get">
+    <div class="field_wrapper">
+      <label for="id_commonset">Set</label>
+      {{ sequence_variation_search_form.commonset|safe }}
+      <label for="id_refacc">Dmel. Accesssion</label>
+      {{ sequence_variation_search_form.refacc|safe }}
+    </div>
+
+    <div class="field_wrapper">
+      <label for="id_refdes">Dmel. Description</label>
+      {{ sequence_variation_search_form.refdes|safe }}
+    </div>
+
+    <div class="field_wrapper">
+      <label for="id_items_per_page">Items per page</label>
+      {{ sequence_variation_search_form.items_per_page|safe }}
+    </div>
+
+    <div class="field_wrapper">
+      <input type="submit", value="Search" />
+    </div>
+    </form>
+{% endif %}

@@ -16,9 +16,11 @@ import pdb
 def index(request):
     archive_search_form = forms.ArchiveSearchForm()
     transcript_search_form = forms.TranscriptSearchForm()
+    sequence_variation_search_form = forms.SequenceVariationSearchForm()
     return render_to_response('transcriptome/index.jinja2',
                               {'archive_search_form': archive_search_form,
-                               'transcript_search_form': transcript_search_form},
+                               'transcript_search_form': transcript_search_form,
+                               'sequence_variation_search_form': sequence_variation_search_form},
                               context_instance=RequestContext(request))
 
 
@@ -115,8 +117,7 @@ def search(request):
         transcript_subset = transcript_set[(page - 1) * pager.get('items_per_page'): transcript_set.count()]
 
     return render_to_response('transcriptome/search.jinja2',
-                              {'account_status': 'active',
-                               'transcript_search_form': transcript_search_form,
+                              {'transcript_search_form': transcript_search_form,
                                'transcript_subset': transcript_subset,
                                'pager': pager,
                                'getparam': request.GET,

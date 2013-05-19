@@ -1,0 +1,63 @@
+{% extends "transcriptome/base.jinja2" %}
+
+{% block title %}
+  Sequence Variation - Search
+{% endblock title %}
+
+{% block content %}
+  {% block search %}
+    {% include "transcriptome/sequence_variation_search_form.jinja2" %}
+  {% endblock search %}
+
+  <div>
+    Search results: {{ search_count }} <br>
+    Page: {{ pager.current_page }} / {{ pager.last_page }}
+  </div>
+
+  {% if pager.first_page == pager.last_page %}
+    First
+    Previous
+    Next
+    Last
+  {% elif pager.current_page == 1 %}
+    First
+    Previous
+    <a href="/bdorseq/seqvar/search/?page={{ pager.next_page }}&commonset={{ getparam.commonset }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&items_per_page={{ getparam.items_per_page }}">Next<a>
+    <a href="/bdorseq/seqvar/search/?page={{ pager.last_page }}&commonset={{ getparam.commonset }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&items_per_page={{ getparam.items_per_page }}">Last<a>
+  {% elif pager.current_page == pager.last_page %}
+    <a href="/bdorseq/seqvar/search/?page={{ pager.first_page }}&commonset={{ getparam.commonset }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&items_per_page={{ getparam.items_per_page }}">First<a>
+    <a href="/bdorseq/seqvar/search/?page={{ pager.previous_page }}&commonset={{ getparam.commonset }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&items_per_page={{ getparam.items_per_page }}">Previous<a>
+    Next
+    Last
+  {% else %}
+    <a href="/bdorseq/seqvar/search/?page={{ pager.first_page }}&commonset={{ getparam.commonset }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&items_per_page={{ getparam.items_per_page }}">First<a>
+    <a href="/bdorseq/seqvar/search/?page={{ pager.previous_page }}&commonset={{ getparam.commonset }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&items_per_page={{ getparam.items_per_page }}">Previous<a>
+    <a href="/bdorseq/seqvar/search/?page={{ pager.next_page }}&commonset={{ getparam.commonset }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&items_per_page={{ getparam.items_per_page }}">Next<a>
+    <a href="/bdorseq/seqvar/search/?page={{ pager.last_page }}&commonset={{ getparam.commonset }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&items_per_page={{ getparam.items_per_page }}">Last<a>
+  {% endif %}
+
+  {% if refseqset.exists() %}
+    {% block list_table %}
+      <table>
+        <thead>
+          <tr>
+            <th>Reference Acc</th>
+            <th>Reference Description</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for query in refseqset %}
+            <tr>
+              <td><a href="/bdorseq/seqvar/details/{{ getparam.commonset }}/{{ query.accession }}">
+                  {{ query.accession }}</a></td>
+              <td>{{ query.description }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endblock list_table %}
+  {% else %}
+    <h2>No result is found!</h2>
+  {% endif %}
+{% endblock content %}

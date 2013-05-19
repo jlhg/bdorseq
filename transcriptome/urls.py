@@ -12,5 +12,5 @@ urlpatterns = patterns('',
                        url(r'^details/(?P<seqname>[A-Z0-9.]+)/', transcript.details, name='details'),
                        url(r'^archive/', archive.search, name='archive'),
                        url(r'^seqvar/search/', seqvar.search, name='svsearch'),
-                       url(r'^seqvar/(?P<commonset>[a-z_]+)/(?P<refacc>[A-Z0-9._]+)/', seqvar.details, name='svdetail'),
+                       url(r'^seqvar/details/(?P<commonset>[a-z_]+)/(?P<refacc>[A-Z0-9._]+)/', seqvar.details, name='svdetail'),
                        )

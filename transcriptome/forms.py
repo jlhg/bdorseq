@@ -56,11 +56,17 @@ class SequenceVariationSearchForm(forms.Form):
                                   choices=[('for', 'Formothion'),
                                            ('fen', 'Fenthion'),
                                            ('met', 'Methomyl'),
-                                           ('for_fen', 'Formothion/Fenthion'),
-                                           ('for_met', 'Formothion/Methomyl'),
-                                           ('fen_met', 'Fenthion/Methomyl'),
-                                           ('for_fen_metm', 'Formothion/Fenthion/Methomyl')])
+                                           ('for_fen', 'For/Fen'),
+                                           ('for_met', 'For/Met'),
+                                           ('fen_met', 'Fen/Met'),
+                                           ('for_fen_metm', 'For/Fen/Met')])
     refacc = forms.CharField(max_length=15, required=False)
+    refdes = forms.CharField(required=False)
+    items_per_page = forms.ChoiceField(initial=20,
+                                       choices=[(20, '20'),
+                                                (50, '50'),
+                                                (100, '100'),
+                                                (200, '200')])
 
 
 class ExportTranscriptListForm(forms.Form):

@@ -52,13 +52,10 @@ def multiple_dna(*args):
     for arg in args:
         seq_name, seq_frame, seq = arg
 
-        if seq_frame < 0:
-            seq_name = seq_name + '(' + str(seq_frame) + ')'
+        if seq_frame != 0:
+            seq_name = '%s(%s)' % (seq_name, seq_frame)
 
-        elif seq_frame > 0:
-            seq_name = seq_name + '(' + str(seq_frame) + ')'
-
-        input_file.write('>' + seq_name + '\n' + seq.upper() + '\n')
+        input_file.write('>%s\n%s\n' % (seq_name, seq.upper()))
         seq_name_lengths.append(len(seq_name))
 
     input_file.flush()
@@ -69,6 +66,7 @@ def multiple_dna(*args):
     mafft_proc = Popen(mafft_cmd, stdout=PIPE, stderr=PIPE, shell=True)
 
     stdout, stderr = mafft_proc.communicate()
+    input_file.close()
 
     return stdout
 
@@ -84,14 +82,14 @@ def multiple_protein(*args):
         seq_name, seq_frame, seq = arg
 
         if seq_frame < 0:
-            seq_name = seq_name + '(' + str(seq_frame) + ')'
+            seq_name = '%s(%s)' % (seq_name, seq_frame)
             seq = Seq(seq).reverse_complement()[-seq_frame - 1:].translate().tostring()
 
         elif seq_frame > 0:
-            seq_name = seq_name + '(' + str(seq_frame) + ')'
+            seq_name = '%s(%s)' % (seq_name, seq_frame)
             seq = Seq(seq)[seq_frame - 1:].translate().tostring()
 
-        input_file.write('>' + seq_name + '\n' + seq.upper() + '\n')
+        input_file.write('>%s\n%s\n' % (seq_name, seq.upper()))
 
         seq_name_lengths.append(len(seq_name))
 
@@ -102,8 +100,7 @@ def multiple_protein(*args):
     mafft_cmd = 'mafft --preservecase --clustalout --namelength ' + str(namelength) + ' ' + input_file.name
     mafft_proc = Popen(mafft_cmd, stdout=PIPE, stderr=PIPE, shell=True)
 
-    input_file.close()
-
     stdout, stderr = mafft_proc.communicate()
+    input_file.close()
 
     return stdout

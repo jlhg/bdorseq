@@ -1,12 +1,12 @@
-from operator import __or__ as OR
 from django.http import Http404, HttpResponseRedirect
 from django.db.models import Q
 from django.template import RequestContext
 from django.core.files.temp import NamedTemporaryFile
+from django.core.exceptions import ObjectDoesNotExist
 from coffin.shortcuts import render_to_response
 from transcriptome import forms
 from transcriptome.views.decorator import login_checker
-from transcriptome.models import Msap, CommonMutation, Transcript
+from transcriptome.models import Transcript, Refseq, Msap
 from scripts import alignment
 from scripts import msaparser
 
@@ -16,93 +16,147 @@ def search(request):
     if request.method == 'GET':
         commonset = request.GET.get('commonset')
         refacc = str(request.GET.get('refacc')).strip()
-        order = request.GET.get('order', 'hit_name')
+        refdes = str(request.GET.get('refdes')).strip()
+        order = request.GET.get('order', 'accession')
+        items_per_page = request.GET.get('items_per_page', 20)
+        page = int(request.GET.get('page', 1))
+
+        if not str(items_per_page).isdigit():
+            items_per_page = 20
+        else:
+            items_per_page = int(items_per_page)
+
         sequence_variation_search_form = forms.SequenceVariationSearchForm(request.GET)
 
     else:
         raise Http404
 
+    if page < 1:
+        page = 1
+    else:
+        pass
+
+    search_options = []
+
     if refacc:
         HttpResponseRedirect('/seqvar/details/%s/%s/' % (commonset, refacc))
 
-    cs_option = {
-        'for': Q(formothion=1),
-        'fen': Q(fenthion=1),
-        'met': Q(methomyl=1),
+    if refdes:
+        search_options.append(Q(hit_description__search=refdes))
+
+    commonset_option = {
+        'for': Q(commonmutation__formothion=1),
+        'fen': Q(commonmutation__fenthion=1),
+        'met': Q(commonmutatoin__methomyl=1),
+        'for_fen': Q(commonmutation__for_fen=1),
+        'fen_met': Q(commonmutation__fen_met=1),
+        'for_fen_met': Q(commonmutation__for_fen_met=1),
     }
 
-    queries = []
-    for insecticide in commonset.split('_'):
-        queries.append(cs_option.get(insecticide))
+    if commonset_option.get(commonset):
+        search_options.append(commonset_option.get(commonset))
+        refseqset = Refseq.objects.filter(*search_options).order_by(order)
+    else:
+        raise Http404
 
-    query_set = CommonMutation.objects.filter(*insecticides).order_by(order)
+    pager = {'items_per_page': items_per_page,
+             'previous_page': None,
+             'next_page': None,
+             'first_page': 1,
+             'last_page': None,
+             'current_page': page
+             }
 
-    # for common_mutation in common_mutation_set:
-    #     commonset_queries.append(Q(hit_name=common_mutation.hit_name))
+    search_count = refseqset.count()
 
-    # if commonset_queries:
-    #     msap_set = msap_set.objects.filter(reduce(OR, commonset_queries)).order_by(order)
-    # else:
-    #     msap_set = msap_set.object.order_by(order)
+    check_total_page = divmod(search_count, items_per_page)
 
-    return render_to_response('transcriptome/seqvar_search.jinja2',
+    if search_count == 0:
+        pager['last_page'] = 1
+
+    elif check_total_page[1] == 0:
+        pager['last_page'] = check_total_page[0]
+
+    else:
+        pager['last_page'] = check_total_page[0] + 1
+
+    if page > 1:
+        # Has previous page
+        pager['previous_page'] = page - 1
+    else:
+        pass
+
+    if page * items_per_page < search_count:
+        # Has next page
+        pager['next_page'] = page + 1
+        refseqset = refseqset[(page - 1) * pager.get('items_per_page'): page * pager.get('items_per_page')]
+
+    else:
+        # Last page
+        refseqset = refseqset[(page - 1) * pager.get('items_per_page'): refseqset.count()]
+
+    return render_to_response('transcriptome/svsearch.jinja2',
                               {'sequence_variation_search_form': sequence_variation_search_form,
-                               'common_mutatoin_set': query_set,
-                               'params': request.GET,
+                               'refseqset': refseqset,
+                               'pager': pager,
+                               'getparam': request.GET,
+                               'search_count': search_count,
                                },
                               context_instance=RequestContext(request))
 
 
 @login_checker
 def details(request, commonset, refacc):
-    msap_set = Msap.objects.filter(hit_name=refacc)
+    msapset = Msap.objects.filter(hit_name=refacc)
 
     alignment_results = {}
     msaps = {}
-    parser = msaparser.Parser()
+    parser_dna = msaparser.Parser()
+    parser_protein = msaparser.Parser()
 
     for insecticide in commonset.split('_'):
         try:
-            msap = msap_set.objects.get(line_insecticide=insecticide)
-
+            msap = msapset.get(insecticide=insecticide)
         except ObjectDoesNotExist:
             continue
-
-        except:
+        else:
             msaps.update({insecticide: msap})
 
-            ss_transcript = Transcript.objects.get(seqname=msap.ss_name)
-            rs_transcript = Transcript.objects.get(seqname=msap.rs_name)
-            rc_transcript = Transcript.objects.get(seqname=msap.rc_name)
+            # Executes multiple sequence alignments
+            ss_transcript = Transcript.objects.get(seqname=msap.ss_name_id)
+            rs_transcript = Transcript.objects.get(seqname=msap.rs_name_id)
+            rc_transcript = Transcript.objects.get(seqname=msap.rc_name_id)
 
             alignment_result_dna = NamedTemporaryFile(prefix='clu_')
-            alignment_result_dna.write(alignment.multiple_dna([(ss_transcript.seqname,
-                                                                0,
-                                                                ss_transcript.seq),
-                                                               (rs_transcript.seqname,
-                                                                0,
-                                                                rs_transcript.seq),
-                                                               (rc_transcript.seqname,
-                                                                0,
-                                                                rc_transcript.seq)]))
+            alignment_result_dna.write(alignment.multiple_dna(*[(ss_transcript.seqname,
+                                                                 0,
+                                                                 ss_transcript.seq),
+                                                                (rs_transcript.seqname,
+                                                                 0,
+                                                                 rs_transcript.seq),
+                                                                (rc_transcript.seqname,
+                                                                 0,
+                                                                 rc_transcript.seq)]))
             alignment_result_dna.flush()
+            parser_dna.parse(alignment_result_dna.name, 'n')
+            alignment_result_dna.close()
 
             alignment_result_protein = NamedTemporaryFile(prefix='clu_')
-            alignment_result_protein.write(alignment.multiple_protein([(ss_transcript.seqname,
-                                                                        ss_transcript.homology.query_frame,
-                                                                        ss_transcript.seq),
-                                                                       (rs_transcript.seqname,
-                                                                        rs_transcript.homology.query_frame,
-                                                                        rs_transcript.seq),
-                                                                       (rc_transcript.seqname,
-                                                                        rc_transcript.homology.query_frame,
-                                                                        rc_transcript.seq)]))
+            alignment_result_protein.write(alignment.multiple_protein(*[(ss_transcript.seqname,
+                                                                         ss_transcript.homology_set.all()[0].query_frame,
+                                                                         ss_transcript.seq),
+                                                                        (rs_transcript.seqname,
+                                                                         rs_transcript.homology_set.all()[0].query_frame,
+                                                                         rs_transcript.seq),
+                                                                        (rc_transcript.seqname,
+                                                                         rc_transcript.homology_set.all()[0].query_frame,
+                                                                         rc_transcript.seq)]))
             alignment_result_protein.flush()
-
-            alignment_results.update({insecticide: (parser.parse(alignment_result_dna.name, 'n').get_clustal_html(),
-                                                    parser.parse(alignment_result_protein.name, 'a').get_clustal_html())})
-            alignment_result_dna.close()
+            parser_protein.parse(alignment_result_protein.name, 'a')
             alignment_result_protein.close()
+
+            alignment_results.update({insecticide: (parser_dna.get_clustal_html(),
+                                                    parser_protein.get_clustal_html())})
 
     return render_to_response('transcriptome/svdetails.jinja2',
                               {'msaps': msaps,

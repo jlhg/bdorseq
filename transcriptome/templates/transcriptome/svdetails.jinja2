@@ -1,0 +1,29 @@
+{% extends "transcriptome/base.jinja2" %}
+
+{% block title %}
+  {# {% if transcript.seqname is defined %} #}
+  {#   Details - {{ transcript.seqname }} #}
+  {# {% else %} #}
+  {#   Details #}
+  {# {% endif %} #}
+{% endblock title %}
+
+
+{% block content %}
+  <table width="800">
+    {% if alignment_results.for is defined %}
+      <tr>
+        <th>DNA Multiple Sequence Alignment</th>
+      </tr>
+      <tr>
+        <td>{{ alignment_results.for.0|safe }}</td>
+      </tr>
+      <tr>
+        <th>Protein Multiple Sequence Alignment</th>
+      </tr>
+      <tr>
+        <td>{{ alignment_results.for.1|safe }}</td>
+      </tr>
+    {% endif %}
+  </table>
+{% endblock content %}
