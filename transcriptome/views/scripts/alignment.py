@@ -52,8 +52,12 @@ def multiple_dna(*args):
     for arg in args:
         seq_name, seq_frame, seq = arg
 
-        if seq_frame != 0:
-            seq_name = '%s(%s)' % (seq_name, seq_frame)
+        if seq_frame < 0:
+            seq_name = '%s(%s)' % (seq_name, '-')
+            seq = Seq(seq).reverse_complement().tostring()
+        elif seq_frame > 0:
+            seq_name = '%s(%s)' % (seq_name, '+')
+
 
         input_file.write('>%s\n%s\n' % (seq_name, seq.upper()))
         seq_name_lengths.append(len(seq_name))

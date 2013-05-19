@@ -164,13 +164,13 @@ def details(request, commonset, refacc):
             # Executes multiple sequence alignments
             alignment_result_dna = NamedTemporaryFile(prefix='clu_')
             alignment_result_dna.write(alignment.multiple_dna(*[(ss_transcript.seqname,
-                                                                 0,
+                                                                 int(msap.ss_frame),
                                                                  ss_transcript.seq),
                                                                 (rs_transcript.seqname,
-                                                                 0,
+                                                                 int(msap.rs_frame),
                                                                  rs_transcript.seq),
                                                                 (rc_transcript.seqname,
-                                                                 0,
+                                                                 int(msap.rc_frame),
                                                                  rc_transcript.seq)]))
             alignment_result_dna.flush()
             parser_dna.parse(alignment_result_dna.name, 'n')
