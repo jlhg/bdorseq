@@ -1,5 +1,3 @@
-#!/usr/bin/env python2.7
-#
 # msaparser - Parsing clustal file for sequence variation analysis
 #
 # Copyright (C) 2013, Jian-Long Huang
@@ -7,7 +5,7 @@
 # http://opensource.org/licenses/MIT
 #
 # Author: Jian-Long Huang (jianlong@ntu.edu.tw)
-# Version: 1.0
+# Version: 1.1
 # Created: 2013.5.18
 
 
@@ -131,7 +129,7 @@ class Parser(object):
                         self._rc.add_mutposition(j)
 
     def get_clustal_html(self):
-        if not self.parse:
+        if not self._parse:
             return None
 
         html = []
