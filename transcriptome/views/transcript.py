@@ -1,13 +1,16 @@
+from operator import __or__ as OR
 from django.http import HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.template import RequestContext
 from django.db.models import Q
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.temp import NamedTemporaryFile
 from coffin.shortcuts import render_to_response
 from transcriptome.views.decorator import login_checker
 from transcriptome.models import Transcript, Refseq
 from transcriptome import forms
-from scripts import modelformatter, alignment, formatter
+from scripts import modelformatter, alignment, formatter, blast
 import re
 import pdb
 
@@ -64,7 +67,15 @@ def search(request):
         pass
 
     if seq:
-        search_options.append(Q(seq__icontains=seq))
+        # TODO: Run blastdb
+        # get more than one db according to selected lines: -db "a b c"
+        fi_seq = NamedTemporaryFile(prefix='seq')
+        hitnames = blast.blastn_get_hit(fi_seq.name, settings.BLASTDB.get('all'))
+        search_options_seq = []
+        for name in hitnames:
+            search_options_seq.append(Q(seqname__icontains=seq))
+
+        search_options.append(reduce(OR, search_options_seq))
     else:
         pass
 
