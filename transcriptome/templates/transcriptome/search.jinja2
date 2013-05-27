@@ -22,18 +22,18 @@
     {% elif pager.current_page == 1 %}
       First
       Previous
-      <a href="/bdorseq/search/?page={{ pager.next_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Next<a>
-      <a href="/bdorseq/search/?page={{ pager.last_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Last<a>
+      <a href="/bdorseq/search/?page={{ pager.next_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Next</a>
+      <a href="/bdorseq/search/?page={{ pager.last_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Last</a>
     {% elif pager.current_page == pager.last_page %}
-      <a href="/bdorseq/search/?page={{ pager.first_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">First<a>
-      <a href="/bdorseq/search/?page={{ pager.previous_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Previous<a>
+      <a href="/bdorseq/search/?page={{ pager.first_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">First</a>
+      <a href="/bdorseq/search/?page={{ pager.previous_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Previous</a>
       Next
       Last
     {% else %}
-      <a href="/bdorseq/search/?page={{ pager.first_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">First<a>
-      <a href="/bdorseq/search/?page={{ pager.previous_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Previous<a>
-      <a href="/bdorseq/search/?page={{ pager.next_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Next<a>
-      <a href="/bdorseq/search/?page={{ pager.last_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Last<a>
+      <a href="/bdorseq/search/?page={{ pager.first_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">First</a>
+      <a href="/bdorseq/search/?page={{ pager.previous_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Previous</a>
+      <a href="/bdorseq/search/?page={{ pager.next_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Next</a>
+      <a href="/bdorseq/search/?page={{ pager.last_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Last</a>
     {% endif %}
 
     {% if transcript_subset.exists() %}
