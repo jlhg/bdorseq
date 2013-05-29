@@ -26,6 +26,13 @@ class TranscriptSearchForm(forms.Form):
                                      widget=forms.CheckboxSelectMultiple(),
                                      )
     seq = forms.CharField(required=False)
+    evalue = forms.ChoiceField(initial=1e-5,
+                               choices=[(1e-10, '1e-10'),
+                                        (1e-5, '1e-5'),
+                                        (1e-2, '1e-2'),
+                                        (10, '10'),
+                                        ]
+                               )
     refacc = forms.CharField(max_length=15, required=False)
     refdes = forms.CharField(required=False)
     items_per_page = forms.ChoiceField(initial=20,

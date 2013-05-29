@@ -34,6 +34,7 @@ def search(request):
         seqname = str(request.GET.get('seqname', '')).strip()
         line = request.GET.getlist('line', [])
         seq = str(request.GET.get('seq', '')).strip()
+        evalue = request.GET.get('evalue', '')
         refacc = str(request.GET.get('refacc', '')).strip()
         refdes = str(request.GET.get('refdes', '')).strip()
         order = request.GET.get('order', 'seqname')
@@ -63,21 +64,33 @@ def search(request):
     if line:
         search_options_line = []
         for i in line:
-            search_options_line.append(Q(line=line))
+            search_options_line.append(Q(line=i))
         search_options.append(reduce(OR, search_options_line))
     else:
-        # No line is selected, set id = 0 to fetch 'no result'
+        # No line is selected, set id = 0 so fetch 'no result'
         search_options.append(Q(id=0))
 
     if seq:
-        # TODO: Run blastdb
-        # get more than one db according to selected lines: -db "a b c"
+        try:
+            evalue = float(evalue)
+        except ValueError:
+            # Invalid value, set id = 0 so fetch 'no result'
+            search_options.append(Q(id=0))
+
         fi_seq = NamedTemporaryFile(prefix='seq')
-        db_path = []
+        fi_seq.write('>query\n{}\n'.format(seq))
+        fi_seq.flush()
+
+        blastdb_path = []
         for i in line:
             if settings.BLASTDB.get(i):
-                db_path.append(os.path.join(settings.BLASTDB_ROOT, settings.BLASTDB.get(i)))
-        hitnames = blast.blastn_and_gethit(fi_seq.name, ''.join(db_path))
+                blastdb_path.append(os.path.join(settings.BLASTDB_ROOT, settings.BLASTDB.get(i)))
+        if blastdb_path:
+            hitnames = blast.blastn_and_gethitnames(fi_seq.name, ' '.join(blastdb_path), evalue)
+        else:
+            hitnames = []
+
+        fi_seq.close()
 
         if hitnames:
             search_options_seq = []
@@ -85,6 +98,9 @@ def search(request):
                 search_options_seq.append(Q(seqname=name))
 
             search_options.append(reduce(OR, search_options_seq))
+        else:
+            # No hit is found, set id = 0 so fetch 'no result'
+            search_options.append(Q(id=0))
 
     if refacc:
         search_options.append(Q(homology__hit_name_id__accession__icontains=refacc))
