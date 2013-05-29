@@ -173,4 +173,25 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 LOGIN_URL = '/bdorseq/login/'
 LOGOUT_URL = '/bdorseq/logout/'
+
+# The url of FTP website
+# Example: ftp://127.0.0.1
 FTP_URL = ''
+
+# blast database
+BLASTDB_ROOT = ''
+BLASTDB = {
+    'ss_hs1': 'ss_hs1.fa',
+    'ss_hs2': 'ss_hs2.fa',
+    'ss_chi': 'ss_chi.fa',
+    'rs_for': 'rs_for.fa',
+    'rs_fen': 'rs_fen.fa',
+    'rs_met': 'rs_met.fa',
+    'rs_mal': 'rs_mal.fa',
+    'rs_nal': 'rs_nal.fa',
+    'rs_tri': 'rs_tri.fa',
+    'rs_spi': 'rs_spi.fa',
+    'rc_for': 'rc_for.fa',
+    'rc_fen': 'rc_fen.fa',
+    'rc_met': 'rc_met.fa',
+}

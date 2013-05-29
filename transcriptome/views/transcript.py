@@ -1,3 +1,5 @@
+import re
+import os
 from operator import __or__ as OR
 from django.http import HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
@@ -11,7 +13,6 @@ from transcriptome.views.decorator import login_checker
 from transcriptome.models import Transcript, Refseq
 from transcriptome import forms
 from scripts import modelformatter, alignment, formatter, blast
-import re
 import pdb
 
 
@@ -31,7 +32,7 @@ def index(request):
 def search(request):
     if request.method == 'GET':
         seqname = str(request.GET.get('seqname', '')).strip()
-        line = request.GET.get('line', '')
+        line = request.GET.getlist('line', [])
         seq = str(request.GET.get('seq', '')).strip()
         refacc = str(request.GET.get('refacc', '')).strip()
         refdes = str(request.GET.get('refdes', '')).strip()
@@ -58,46 +59,49 @@ def search(request):
 
     if seqname:
         search_options.append(Q(seqname__icontains=seqname))
-    else:
-        pass
 
     if line:
-        search_options.append(Q(line__icontains=line))
+        search_options_line = []
+        for i in line:
+            search_options_line.append(Q(line=line))
+        search_options.append(reduce(OR, search_options_line))
     else:
-        pass
+        # No line is selected, set id = 0 to fetch 'no result'
+        search_options.append(Q(id=0))
 
     if seq:
         # TODO: Run blastdb
         # get more than one db according to selected lines: -db "a b c"
         fi_seq = NamedTemporaryFile(prefix='seq')
-        hitnames = blast.blastn_get_hit(fi_seq.name, settings.BLASTDB.get('all'))
-        search_options_seq = []
-        for name in hitnames:
-            search_options_seq.append(Q(seqname__icontains=seq))
+        db_path = []
+        for i in line:
+            if settings.BLASTDB.get(i):
+                db_path.append(os.path.join(settings.BLASTDB_ROOT, settings.BLASTDB.get(i)))
+        hitnames = blast.blastn_and_gethit(fi_seq.name, ''.join(db_path))
 
-        search_options.append(reduce(OR, search_options_seq))
-    else:
-        pass
+        if hitnames:
+            search_options_seq = []
+            for name in hitnames:
+                search_options_seq.append(Q(seqname=name))
+
+            search_options.append(reduce(OR, search_options_seq))
 
     if refacc:
         search_options.append(Q(homology__hit_name_id__accession__icontains=refacc))
-    else:
-        pass
 
     if refdes:
         search_options.append(Q(homology__hit_description__search=refdes))
-    else:
-        pass
 
     transcript_set = Transcript.objects.filter(*search_options).order_by(order)
 
-    pager = {'items_per_page': items_per_page,
-             'previous_page': None,
-             'next_page': None,
-             'first_page': 1,
-             'last_page': None,
-             'current_page': page
-             }
+    pager = {
+        'items_per_page': items_per_page,
+        'previous_page': None,
+        'next_page': None,
+        'first_page': 1,
+        'last_page': None,
+        'current_page': page
+    }
 
     search_count = transcript_set.count()
 

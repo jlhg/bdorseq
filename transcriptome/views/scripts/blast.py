@@ -3,9 +3,9 @@ from django.core.files.temp import NamedTemporaryFile
 from Bio.Blast import NCBIXML
 
 
-def blastn(query_path, db_path, evalue=1e-5):
+def blastn(query_path='', db_path='', evalue=1e-5):
     """
-    Do BLASTN and return blast records object
+    Do blastn and return blast records object
     """
     fo = NamedTemporaryFile(prefix='blastn_')
     blastn_cmd = 'blastn -query {} -db "{}" -evalue {} -out {}'.format(query_path,
@@ -20,7 +20,7 @@ def blastn(query_path, db_path, evalue=1e-5):
     return blast_records
 
 
-def blastn_get_hit(query_path, db_path, evalue=1e-5):
+def blastn_and_gethit(query_path, db_path, evalue=1e-5):
     blast_records = blastn(query_path, db_path, evalue)
 
     hitnames = []

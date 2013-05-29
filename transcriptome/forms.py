@@ -8,22 +8,23 @@ class LoginForm(forms.Form):
 
 class TranscriptSearchForm(forms.Form):
     seqname = forms.CharField(max_length=50, required=False)
-    line = forms.ChoiceField(initial='',
-                             choices=[('', 'All'),
-                                      ('ss_old', 'SS/Hsu1'),
-                                      ('ss_new', 'SS/Hsu2'),
-                                      ('ss_chi', 'SS/China'),
-                                      ('rs_for', 'RS/Formothion'),
-                                      ('rs_fen', 'RS/Fenthion'),
-                                      ('rs_met', 'RS/Methomyl'),
-                                      ('rs_mal', 'RS/Malathion'),
-                                      ('rs_nal', 'RS/Naled'),
-                                      ('rs_tri', 'RS/Trichlorfon'),
-                                      ('rs_spi', 'RS/Spinosad'),
-                                      ('rc_for', 'RC/Formothion'),
-                                      ('rc_fen', 'RC/Fenthion'),
-                                      ('rc_met', 'RC/Methomyl')],
-                             required=False)
+    line = forms.MultipleChoiceField(choices=[('ss_hs1', 'SS/Hsu1'),
+                                              ('ss_hs2', 'SS/Hsu2'),
+                                              ('ss_chi', 'SS/China'),
+                                              ('rs_for', 'RS/Formothion'),
+                                              ('rs_fen', 'RS/Fenthion'),
+                                              ('rs_met', 'RS/Methomyl'),
+                                              ('rs_mal', 'RS/Malathion'),
+                                              ('rs_nal', 'RS/Naled'),
+                                              ('rs_tri', 'RS/Trichlorfon'),
+                                              ('rs_spi', 'RS/Spinosad'),
+                                              ('rc_for', 'RC/Formothion'),
+                                              ('rc_fen', 'RC/Fenthion'),
+                                              ('rc_met', 'RC/Methomyl'),
+                                              ],
+                                     required=False,
+                                     widget=forms.CheckboxSelectMultiple(),
+                                     )
     seq = forms.CharField(required=False)
     refacc = forms.CharField(max_length=15, required=False)
     refdes = forms.CharField(required=False)
@@ -31,13 +32,14 @@ class TranscriptSearchForm(forms.Form):
                                        choices=[(20, '20'),
                                                 (50, '50'),
                                                 (100, '100'),
-                                                (200, '200')])
+                                                (200, '200'),
+                                                ],
+                                       )
 
 
 class ArchiveSearchForm(forms.Form):
-    line = forms.ChoiceField(initial='ss_old',
-                             choices=[('ss_old', 'SS/Hsu1'),
-                                      ('ss_new', 'SS/Hsu2'),
+    line = forms.ChoiceField(choices=[('ss_hs1', 'SS/Hsu1'),
+                                      ('ss_hs2', 'SS/Hsu2'),
                                       ('ss_chi', 'SS/China'),
                                       ('rs_for', 'RS/Formothion'),
                                       ('rs_fen', 'RS/Fenthion'),
@@ -47,7 +49,9 @@ class ArchiveSearchForm(forms.Form):
                                       ('rs_tri', 'RS/Trichlorfon'),
                                       ('rc_for', 'RC/Formothion'),
                                       ('rc_fen', 'RC/Fenthion'),
-                                      ('rc_met', 'RC/Methomyl')])
+                                      ('rc_met', 'RC/Methomyl'),
+                                      ],
+                             )
     refacc = forms.CharField(max_length=15, required=False)
 
 
@@ -59,18 +63,18 @@ class SequenceVariationSearchForm(forms.Form):
                                            ('for_fen', 'For/Fen'),
                                            ('for_met', 'For/Met'),
                                            ('fen_met', 'Fen/Met'),
-                                           ('for_fen_met', 'For/Fen/Met')])
+                                           ('for_fen_met', 'For/Fen/Met'),
+                                           ],
+                                  )
     refacc = forms.CharField(max_length=15, required=False)
     refdes = forms.CharField(required=False)
     items_per_page = forms.ChoiceField(initial=20,
                                        choices=[(20, '20'),
                                                 (50, '50'),
                                                 (100, '100'),
-                                                (200, '200')])
-
-
-class ExportTranscriptListForm(forms.Form):
-    pass
+                                                (200, '200'),
+                                                ],
+                                       )
 
 
 class ExportTranscriptDetailsForm(forms.Form):
