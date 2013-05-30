@@ -77,7 +77,7 @@ def transcript_homology_to_blast(transcript_objects):
 def transcript_to_expression(transcript_objects):
     tsv = []
 
-    tsv.append('\t'.join(['feature_id',
+    tsv.append('\t'.join(['transcript_name',
                           'gene_length',
                           'ss_rpkm',
                           'rs_rpkm',
