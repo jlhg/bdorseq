@@ -42,7 +42,9 @@ class TranscriptSearchForm(forms.Form):
                                               ],
                                      widget=forms.CheckboxSelectMultiple(),
                                      )
-    seq = forms.CharField(required=False)
+    seq = forms.CharField(required=False,
+                          widget=forms.Textarea(),
+                          )
     evalue = forms.ChoiceField(initial=1e-5,
                                choices=[(1e-10, '1e-10'),
                                         (1e-5, '1e-5'),

@@ -50,6 +50,20 @@ a {
   width: 130px;
 }
 
+.search.seq #title {
+  float: left;
+  padding-right: 3px;
+}
+
+.search.seq #seq {
+  float: left;
+  padding-right: 3px;
+}
+
+.search.seq #evalue {
+  vertical-align: top;
+}
+
 div.clear {
     clear: both;
 }

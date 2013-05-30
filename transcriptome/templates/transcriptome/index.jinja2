@@ -1,12 +1,5 @@
 {% extends "transcriptome/base.jinja2" %}
 
-{% block menu %}
-  <p>
-    <a href="/bdorseq/help" target="_blank">Help</a> |
-    <a href="/bdorseq/logout/">Logout</a>
-  </p>
-{% endblock menu %}
-
 {% block content %}
   {% block search %}
     <h2>Browse: Transcript</h2>
@@ -20,7 +13,7 @@
 
   {% block releases %}
     <h2>Releases (FTP)</h2>
-    Go <a href="{{ FTP_URL }}" target="_blank">here</a> for large file download.
+    Go <a href="{{ FTP_URL }}" target="_blank">HERE</a> for large file download.
   {% endblock releases %}
 
 {% endblock content %}

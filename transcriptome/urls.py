@@ -13,4 +13,5 @@ urlpatterns = patterns('',
                        url(r'^archive/', archive.search, name='archive'),
                        url(r'^seqvar/search/', seqvar.search, name='svsearch'),
                        url(r'^seqvar/details/(?P<commonset>[a-z_]+)/(?P<refacc>[A-Z0-9._]+)/', seqvar.details, name='svdetail'),
+                       url(r'^changelog/', document.changelog, name='changelog'),
                        )

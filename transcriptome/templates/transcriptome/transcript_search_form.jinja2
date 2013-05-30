@@ -28,13 +28,26 @@
 
     </div>
 
-    <div class="field_wrapper">
+    <div class="field_wrapper search seq">
       {# {{ transcript_search_form.seq.errors|safe }} #}
-      <label for="id_seq">Transcript Sequence</label>
-      {{ transcript_search_form.seq|safe }}
-      <label for="id_seq">E-value</label>
-      {{ transcript_search_form.evalue|safe }}
+      <div id="title">
+        <label for="id_seq">Transcript Sequence</label>
+      </div>
+      <div id="seq">
+        {{ transcript_search_form.seq|safe }}
+      </div>
+      <div id="evalue">
+        <label for="id_seq">E-value</label>
+        {{ transcript_search_form.evalue|safe }}
+      </div>
+      (Use BLASTN 2.2.28+)
     </div>
+
+
+    <div class="field_wrapper">
+    </div>
+
+    <div class="clear" />
 
     <div class="field_wrapper">
       {# {{ transcript_search_form.items_per_page.errors|safe }} #}
