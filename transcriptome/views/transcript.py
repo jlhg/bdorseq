@@ -158,6 +158,7 @@ def search(request):
             'transcript_subset': transcript_subset,
             'pager': pager,
             'getparam': request.GET,
+            'line': line,
             'search_count': search_count,
             'is_search': is_search,
         },
@@ -197,12 +198,12 @@ def details(request, seqname):
 def export(request):
     if request.method == 'POST':
         seqname = request.POST.get('seqname', '').strip('/')
-        line = request.POST.get('line', '').strip('/')
+        line = request.POST.getlist('line', [])
         seq = request.POST.get('seq', '').strip('/')
+        evalue = request.GET.get('evalue', '')
         refacc = request.POST.get('refacc', '').strip('/')
         refdes = request.POST.get('refdes', '').strip('/')
         order = request.POST.get('order', 'seqname').strip('/')
-
         ids = []
 
         for i in request.POST:
@@ -221,23 +222,50 @@ def export(request):
 
             if seqname:
                 search_options.append(Q(seqname__icontains=seqname))
-            else:
-                pass
 
             if line:
-                search_options.append(Q(line__icontains=line))
+                search_options_line = []
+                for i in line:
+                    search_options_line.append(Q(line=i))
+                search_options.append(reduce(OR, search_options_line))
             else:
-                pass
+                # No line is selected, set id = 0 so fetch 'no result'
+                search_options.append(Q(id=0))
 
             if seq:
-                search_options.append(Q(seq__icontains=seq))
-            else:
-                pass
+                try:
+                    evalue = float(evalue)
+                except ValueError:
+                    # Invalid value, set id = 0 so fetch 'no result'
+                    search_options.append(Q(id=0))
+
+                fi_seq = NamedTemporaryFile(prefix='seq')
+                fi_seq.write('>query\n{}\n'.format(seq))
+                fi_seq.flush()
+
+                blastdb_path = []
+                for i in line:
+                    if settings.BLASTDB.get(i):
+                        blastdb_path.append(os.path.join(settings.BLASTDB_ROOT, settings.BLASTDB.get(i)))
+                if blastdb_path:
+                    hitnames = blast.blastn_and_gethitnames(fi_seq.name, ' '.join(blastdb_path), evalue)
+                else:
+                    hitnames = []
+
+                fi_seq.close()
+
+                if hitnames:
+                    search_options_seq = []
+                    for name in hitnames:
+                        search_options_seq.append(Q(seqname=name))
+
+                    search_options.append(reduce(OR, search_options_seq))
+                else:
+                    # No hit is found, set id = 0 so fetch 'no result'
+                    search_options.append(Q(id=0))
 
             if refacc:
                 search_options.append(Q(homology__hit_name_id__accession__icontains=refacc))
-            else:
-                pass
 
             if refdes:
                 search_options.append(Q(homology__hit_description__search=refdes))
