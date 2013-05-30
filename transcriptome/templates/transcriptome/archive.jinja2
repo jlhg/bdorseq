@@ -24,7 +24,7 @@
       <table>
         <thead>
           <tr>
-            <th></th>
+            <th><input id="homo_selector" type="checkbox" onClick="toggleAll('homo_selector', 'homo_')" /></th>
             <th>Transcript Name</th>
             <th>Length (bp)</th>
             <th>E-value</th>
@@ -38,7 +38,7 @@
           {% for homology in homology_subset %}
             <tr>
               {% if select_status[homology.id] == 1 %}
-                <td><input type="checkbox", name={{ 'homo_' ~ homology.id }}, value={{ homology.id }} /></td>
+                <td><input type="checkbox", id="{{ 'homo_' ~ loop.index0 }}" name="{{ 'homo_' ~ homology.id }}", value="{{ homology.id }}" /></td>
                 <td class="selected"><a href="/bdorseq/details/{{ homology.query_name_id }}">
                     {{ homology.query_name_id ~ '(' ~ homology.query_frame ~ ')' }}</a></td>
                 <td class="selected">{{ homology.query_length }}</td>

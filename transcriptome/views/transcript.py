@@ -46,8 +46,12 @@ def search(request):
         else:
             items_per_page = int(items_per_page)
 
-        transcript_search_form = forms.TranscriptSearchForm(request.GET)
-
+        if 'seqname' in request.GET:
+            is_search = 1
+            transcript_search_form = forms.TranscriptSearchForm(request.GET)
+        else:
+            is_search = 0
+            transcript_search_form = forms.TranscriptSearchForm()
     else:
         raise Http404
 
@@ -147,13 +151,17 @@ def search(request):
         # Last page
         transcript_subset = transcript_set[(page - 1) * pager.get('items_per_page'): transcript_set.count()]
 
-    return render_to_response('transcriptome/search.jinja2',
-                              {'transcript_search_form': transcript_search_form,
-                               'transcript_subset': transcript_subset,
-                               'pager': pager,
-                               'getparam': request.GET,
-                               'search_count': search_count},
-                              context_instance=RequestContext(request))
+    return render_to_response(
+        'transcriptome/search.jinja2',
+        {
+            'transcript_search_form': transcript_search_form,
+            'transcript_subset': transcript_subset,
+            'pager': pager,
+            'getparam': request.GET,
+            'search_count': search_count,
+            'is_search': is_search,
+        },
+        context_instance=RequestContext(request))
 
 
 @login_checker

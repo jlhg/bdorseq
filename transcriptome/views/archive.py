@@ -12,7 +12,7 @@ import pdb
 @login_checker
 def search(request):
     if request.method == 'GET':
-        line = request.GET.get('line', '')
+        line = request.GET.getlist('line', [])
         refacc = str(request.GET.get('refacc', '')).strip()
         # order = request.GET.get('order', 'seqname')
 
@@ -36,7 +36,7 @@ def search(request):
                 # No selected items
                 align_type = 'all'
 
-        if request.GET.get('line'):
+        if 'line' in request.GET:
             archive_search_form = forms.ArchiveSearchForm(request.GET)
         else:
             archive_search_form = forms.ArchiveSearchForm()
@@ -61,7 +61,7 @@ def search(request):
         for homology in homology_set:
             transcript = Transcript.objects.get(seqname=homology.query_name_id)
 
-            if transcript.line == line:
+            if transcript.line in line:
                 homology_subset.append(homology)
 
                 if align_type == 'include':

@@ -9,78 +9,79 @@
       {% include "transcriptome/transcript_search_form.jinja2" %}
     {% endblock search %}
 
-    <div>
-      Search results: {{ search_count }} <br>
-      Page: {{ pager.current_page }} / {{ pager.last_page }}
-    </div>
+    {% if is_search %}
+      <div>
+        Search results: {{ search_count }} <br>
+        Page: {{ pager.current_page }} / {{ pager.last_page }}
+      </div>
 
-    {% if pager.first_page == pager.last_page %}
-      First
-      Previous
-      Next
-      Last
-    {% elif pager.current_page == 1 %}
-      First
-      Previous
-      <a href="/bdorseq/search/?page={{ pager.next_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Next</a>
-      <a href="/bdorseq/search/?page={{ pager.last_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Last</a>
-    {% elif pager.current_page == pager.last_page %}
-      <a href="/bdorseq/search/?page={{ pager.first_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">First</a>
-      <a href="/bdorseq/search/?page={{ pager.previous_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Previous</a>
-      Next
-      Last
-    {% else %}
-      <a href="/bdorseq/search/?page={{ pager.first_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">First</a>
-      <a href="/bdorseq/search/?page={{ pager.previous_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Previous</a>
-      <a href="/bdorseq/search/?page={{ pager.next_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Next</a>
-      <a href="/bdorseq/search/?page={{ pager.last_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Last</a>
-    {% endif %}
+      {% if pager.first_page == pager.last_page %}
+        First
+        Previous
+        Next
+        Last
+      {% elif pager.current_page == 1 %}
+        First
+        Previous
+        <a href="/bdorseq/search/?page={{ pager.next_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Next</a>
+        <a href="/bdorseq/search/?page={{ pager.last_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Last</a>
+      {% elif pager.current_page == pager.last_page %}
+        <a href="/bdorseq/search/?page={{ pager.first_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">First</a>
+        <a href="/bdorseq/search/?page={{ pager.previous_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Previous</a>
+        Next
+        Last
+      {% else %}
+        <a href="/bdorseq/search/?page={{ pager.first_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">First</a>
+        <a href="/bdorseq/search/?page={{ pager.previous_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Previous</a>
+        <a href="/bdorseq/search/?page={{ pager.next_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Next</a>
+        <a href="/bdorseq/search/?page={{ pager.last_page }}&line={{ getparam.line }}&seqname={{ getparam.seqname }}&refacc={{ getparam.refacc }}&refdes={{ getparam.refdes }}&seq={{ getparam.seq }}&items_per_page={{ getparam.items_per_page }}">Last</a>
+      {% endif %}
 
-    {% if transcript_subset.exists() %}
-      {% block export_form %}
-        <form name="export_form", action="/bdorseq/export/" method="post">
-          <input type="hidden" name="seqname", value="{{ getparam.seqname }}" />
-          <input type="hidden" name="line", value="{{ getparam.line }}" />
-          <input type="hidden" name="seq", value="{{ getparam.seq }}" />
-          <input type="hidden" name="refacc", value="{{ getparam.refacc }}" />
-          <input type="hidden" name="refdes", value="{{ getparam.refdes }}" />
-          <input type="submit", name="export_fasta", value="Download FASTA" />
-          <input type="submit", name="export_blast", value="Download BLAST" />
-          <input type="submit", name="export_rpkm", value="Download Gene Expression" />
-          (<a href="/bdorseq/help#download_options" target="_blank">help</a>)
-          <table>
-            <thead>
-              <tr>
-                <th>{# <input type="checkbox" onClick="toggle('export_form" /> #}</th>
-                <th>Transcript Name</th>
-                <th>Length (bp)</th>
-                <th>Reference Acc</th>
-                <th>Reference Description</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {% for query in transcript_subset %}
+      {% if transcript_subset.exists() %}
+        {% block export_form %}
+          <form name="export_form", action="/bdorseq/export/" method="post">
+            <input type="hidden" name="seqname", value="{{ getparam.seqname }}" />
+            <input type="hidden" name="line", value="{{ getparam.line }}" />
+            <input type="hidden" name="seq", value="{{ getparam.seq }}" />
+            <input type="hidden" name="refacc", value="{{ getparam.refacc }}" />
+            <input type="hidden" name="refdes", value="{{ getparam.refdes }}" />
+            <input type="submit", name="export_fasta", value="Download FASTA" />
+            <input type="submit", name="export_blast", value="Download BLAST" />
+            <input type="submit", name="export_rpkm", value="Download Gene Expression" />
+            (<a href="/bdorseq/help#download_options" target="_blank">help</a>)
+            <table>
+              <thead>
                 <tr>
-                  <td><input type="checkbox", name={{ '_export_' ~ query.id }}, value={{ query.id }} /></td>
-                  <td><a href="/bdorseq/details/{{ query.seqname }}/">
-                      {{ query.seqname }}</a></td>
-                  <td>{{ query.seq|length }}</td>
-                  {% if query.homology_set.all().exists()  %}
-                    <td><a href="/bdorseq/archive/?line={{ query.line }}&refacc={{ query.homology_set.all().0.hit_name_id }}">
-                        {{ query.homology_set.all().0.hit_name_id }}</a></td>
-                    <td>{{ query.homology_set.all().0.hit_description }}</td>
-                  {% else %}
-                    <td></td>
-                    <td></td>
-                  {% endif %}
+                  <th><input id="export_selector" type="checkbox" onClick="toggleAll('export_selector', 'export_')" /></th>
+                  <th>Transcript Name</th>
+                  <th>Length (bp)</th>
+                  <th>Reference Acc</th>
+                  <th>Reference Description</th>
                 </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </form>
-      {% endblock export_form %}
-    {% else %}
-      <h2>No result is found!</h2>
+              </thead>
+
+              <tbody>
+                {% for query in transcript_subset %}
+                  <tr>
+                    <td><input type="checkbox", id="{{ 'export_' ~ loop.index0 }}" name="{{ '_export_' ~ query.id }}", value="{{ query.id }}" /></td>
+                    <td><a href="/bdorseq/details/{{ query.seqname }}/">{{ query.seqname }}</a></td>
+                    <td>{{ query.seq|length }}</td>
+                    {% if query.homology_set.all().exists()  %}
+                      <td><a href="/bdorseq/archive/?line={{ query.line }}&refacc={{ query.homology_set.all().0.hit_name_id }}">
+                          {{ query.homology_set.all().0.hit_name_id }}</a></td>
+                      <td>{{ query.homology_set.all().0.hit_description }}</td>
+                    {% else %}
+                      <td></td>
+                      <td></td>
+                    {% endif %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </form>
+        {% endblock export_form %}
+      {% else %}
+        <h2>No result is found!</h2>
+      {% endif %}
     {% endif %}
 {% endblock content %}

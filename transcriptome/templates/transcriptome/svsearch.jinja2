@@ -8,7 +8,7 @@
   {% block search %}
     {% include "transcriptome/sequence_variation_search_form.jinja2" %}
   {% endblock search %}
-  {% if is_search == 1 %}
+  {% if is_search %}
     <div>
       Search results: {{ search_count }} <br>
       Page: {{ pager.current_page }} / {{ pager.last_page }}

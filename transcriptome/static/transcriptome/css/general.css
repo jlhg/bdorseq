@@ -33,3 +33,23 @@ a {
     background-color: red;
     color: white;
 }
+
+
+.search.line ul {
+  float: left;
+  list-style-type: none;
+  padding:0;
+  margin:0;
+  display: inline;
+  width: 50%;
+}
+
+.search.line li {
+  float: left;
+  display: inline;
+  width: 130px;
+}
+
+div.clear {
+    clear: both;
+}

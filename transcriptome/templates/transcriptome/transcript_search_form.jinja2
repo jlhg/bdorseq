@@ -1,14 +1,16 @@
 {% if transcript_search_form %}
   <form action="/bdorseq/search/" method="get">
-    {# {{ transcript_search_form.non_field_errors|safe }} #}
-
-    <div class="field_wrapper">
-      {# {{ transcript_search_form.line.errors|safe }} #}
+    <div class="field_wrapper search line">
       <label for="id_line">Line</label>
+      <div class="clear" />
+      {{ transcript_search_form.line_selector|safe }}
+      <div class="clear" />
       {{ transcript_search_form.line|safe }}
     </div>
 
-    <div class="field_wrapper">
+    <div class="clear" />
+
+    <div class="field_wrapper search seqname">
       {# {{ transcript_search_form.seqname.errors|safe }} #}
       <label for="id_seqname">Transcript Name</label>
       {{ transcript_search_form.seqname|safe }}
