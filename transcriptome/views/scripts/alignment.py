@@ -66,7 +66,7 @@ def multiple_dna(*args):
 
     namelength = max(seq_name_lengths) + 4
 
-    mafft_cmd = 'mafft --preservecase --clustalout --namelength ' + str(namelength) + ' ' + input_file.name
+    mafft_cmd = 'mafft --genafpair --maxiterate 1000 --preservecase --clustalout --namelength ' + str(namelength) + ' ' + input_file.name
     mafft_proc = Popen(mafft_cmd, stdout=PIPE, stderr=PIPE, shell=True)
 
     stdout, stderr = mafft_proc.communicate()
@@ -87,11 +87,11 @@ def multiple_protein(*args):
 
         if seq_frame < 0:
             seq_name = '%s(%s)' % (seq_name, seq_frame)
-            seq = Seq(seq).reverse_complement()[-seq_frame - 1:].translate().tostring()
+            seq = Seq(seq).reverse_complement()[-seq_frame - 1:].translate(stop_symbol='').tostring()
 
         elif seq_frame > 0:
             seq_name = '%s(%s)' % (seq_name, seq_frame)
-            seq = Seq(seq)[seq_frame - 1:].translate().tostring()
+            seq = Seq(seq)[seq_frame - 1:].translate(stop_symbol='').tostring()
 
         input_file.write('>%s\n%s\n' % (seq_name, seq.upper()))
 
@@ -101,7 +101,7 @@ def multiple_protein(*args):
 
     namelength = max(seq_name_lengths) + 4
 
-    mafft_cmd = 'mafft --preservecase --clustalout --namelength ' + str(namelength) + ' ' + input_file.name
+    mafft_cmd = 'mafft --genafpair --maxiterate 1000 --preservecase --clustalout --namelength ' + str(namelength) + ' ' + input_file.name
     mafft_proc = Popen(mafft_cmd, stdout=PIPE, stderr=PIPE, shell=True)
 
     stdout, stderr = mafft_proc.communicate()
